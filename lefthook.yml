@@ -1,0 +1,15 @@
+pre-push:
+  jobs:
+    - name: test frontend
+      run: npm run test 
+
+pre-commit:
+  jobs:
+    - name: lint frontend
+      run: npm run lint:fix
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    "lint commit message":
+      run: npm run commitlint {1}
