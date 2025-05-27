@@ -12,4 +12,7 @@ pre-commit:
 commit-msg:
   commands:
     "lint commit message":
+      skip:
+        - merge
+        - rebase
       run: npm run commitlint {1}
