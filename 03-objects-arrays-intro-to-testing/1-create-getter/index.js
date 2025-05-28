@@ -18,10 +18,8 @@ export function createGetter(path) {
       return getOwnProperty(obj, propertyName);
 
     } else {
-      index++;
       obj = obj[propertyName];
-
-      return getPropertyByPathIndex(obj, index);
+      return getPropertyByPathIndex(obj, index + 1);
     }
   }
 
