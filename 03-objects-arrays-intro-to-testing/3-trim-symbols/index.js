@@ -4,7 +4,7 @@
  * @param {number} size - the allowed size of consecutive identical symbols
  * @returns {string} - the new string without extra symbols according passed size
  */
-export function trimSymbols(string, size) {
+export function trimSymbols1(string, size) {
   if (size === 0) {
     return '';
   }
@@ -38,6 +38,38 @@ export function trimSymbols(string, size) {
       quantity++;
     }
     
+  }
+
+  return result;
+}
+
+export function trimSymbols(string, size) {
+  if (size === 0) {
+    return '';
+  }
+
+  if (!size) {
+    return string;
+  }
+
+  let result = '';
+  let quantity = 0;
+  let prevChar = string[0];
+
+  const addSymbolToResult = (index, count) => {
+    result += string[index];
+    prevChar = string[index];
+    quantity = count;
+  };
+
+  for (let i = 0; i < string.length; i++) {
+    if (quantity < size && prevChar === string[i]) {
+      addSymbolToResult(i, quantity + 1);
+    }
+
+    if (prevChar !== string[i]) {
+      addSymbolToResult(i, 1);
+    }
   }
 
   return result;
