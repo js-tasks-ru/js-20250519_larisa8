@@ -61,7 +61,6 @@ export default class NotificationMessage {
 
   remove() {
     this.element.remove();
-    NotificationMessage.lastShown = null;
   }
 
   destroy() {
