@@ -106,8 +106,9 @@ describe('events-practice/sortable-table-v2', () => {
   });
 
   it('should sort "desc" correctly for "sortType" equal number', () => {
+    const field = 'price';
     const { children } = sortableTable.subElements.header;
-    const [_, price] = children;
+    const price = children[children.length - 2];
 
     const pointerdown = new MouseEvent('pointerdown', {
       bubbles: true
@@ -115,12 +116,14 @@ describe('events-practice/sortable-table-v2', () => {
 
     price.dispatchEvent(pointerdown);
 
+    const cellIndex = headerConfig.findIndex(obj => obj.id === field);
+    
     const { body } = sortableTable.subElements;
     const firstRow = body.firstElementChild;
     const lastRow = body.lastElementChild;
 
-    expect(firstRow).toHaveTextContent('53');
-    expect(lastRow).toHaveTextContent('3');
+    expect(firstRow.children[cellIndex].textContent).toEqual('3');
+    expect(lastRow.children[cellIndex].textContent).toEqual('53');
   });
 
   it('should move arrow icon to the corresponding column after sorting', () => {
