@@ -33,7 +33,7 @@ class Tooltip {
     `;
   }
 
-  handlePointerOver = (e) => {
+  showTooltip = (e) => {
     const tooltip = e.target.dataset.tooltip;
     
     if (tooltip) {  
@@ -41,20 +41,26 @@ class Tooltip {
       this.left = `calc(${e.x}px + 10px)`;
       this.render(tooltip); 
     }
-  } 
-
-  handlePointerOut = () => {
-    this.remove();
-  } 
-
-  createListeners() {
-    document.addEventListener('pointerover', this.handlePointerOver, true);
-    document.addEventListener('pointerout', this.handlePointerOut);
   }
 
-  destroyListeners() {
-    document.removeEventListener('pointerover', this.handlePointerOver);
-    document.removeEventListener('pointerout', this.handlePointerOut);
+  hideTooltip = (e) => {
+    const tooltip = e.target.dataset.tooltip;
+
+    if (tooltip) {  
+      this.remove();
+    }
+  }
+
+  createListeners() {
+    document.addEventListener('pointermove', this.showTooltip);
+    document.addEventListener('pointerover', this.showTooltip);
+    document.addEventListener('pointerout', this.hideTooltip);
+  }
+
+  destroyListeners(element = document) {
+    element.removeEventListener('pointermove', this.showTooltip);
+    element.removeEventListener('pointerover', this.showTooltip);
+    element.removeEventListener('pointerout', this.hideTooltip);
   }
 
   remove() {
