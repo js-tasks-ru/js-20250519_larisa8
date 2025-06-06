@@ -6,11 +6,11 @@ class Tooltip {
       return Tooltip.#instance;
     }
     Tooltip.#instance = this;
-    this.createListeners();
   }
 
   initialize () {
     this.element = this.createElement(this.createTemplate());
+    this.createListeners();
   }
 
   render(text) {
