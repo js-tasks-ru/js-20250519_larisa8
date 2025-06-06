@@ -45,7 +45,7 @@ class Tooltip {
     }
   } 
 
-  handlePointerOut = (e) => {
+  handlePointerOut = () => {
     this.remove();
   } 
 
