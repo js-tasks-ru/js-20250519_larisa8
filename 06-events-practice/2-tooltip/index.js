@@ -10,8 +10,6 @@ class Tooltip {
   }
 
   initialize () {
-    this.top = '';
-    this.left = '';
     this.element = this.createElement(this.createTemplate());
   }
 
@@ -31,7 +29,7 @@ class Tooltip {
 
   createTemplate() {
     return `
-      <div class="tooltip">${this.text}</div>
+      <div class="tooltip"></div>
     `;
   }
 
