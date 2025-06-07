@@ -57,10 +57,10 @@ class Tooltip {
     document.addEventListener('pointerout', this.hideTooltip);
   }
 
-  destroyListeners(element = document) {
-    element.removeEventListener('pointermove', this.showTooltip);
-    element.removeEventListener('pointerover', this.showTooltip);
-    element.removeEventListener('pointerout', this.hideTooltip);
+  destroyListeners() {
+    document.removeEventListener('pointermove', this.showTooltip);
+    document.removeEventListener('pointerover', this.showTooltip);
+    document.removeEventListener('pointerout', this.hideTooltip);
   }
 
   remove() {
