@@ -2,8 +2,8 @@ export default class DoubleSlider {
   subElements = {};
 
   constructor({
-    min = 0,
-    max = 100,
+    min = 130,
+    max = 150,
     selected: {
       from = min, 
       to = max 
@@ -39,7 +39,7 @@ export default class DoubleSlider {
     `;
   }
 
-  handleDragStart = (e) => {
+  handleDragStart = () => {
     return false;
   }
 
@@ -55,39 +55,67 @@ export default class DoubleSlider {
   }
 
   calcRangeValue (value) {
-    const unit = Math.floor(this.subElements.inner.offsetWidth / this.max);
-    const rangeValue = unit !== 0 ? Math.floor(value / unit) : 0;
-    return rangeValue > this.max ? this.max : rangeValue;
+    if (!value) {
+      return 0;
+    }
+
+    return Math.round(value * (this.max - this.min) / this.subElements.inner.offsetWidth);
   }
 
   calcPositionInPercents (newPosition) {
     return Math.round(newPosition * 100 / this.subElements.inner.offsetWidth) + '%'; 
   }
 
-  onMouseMove = (e) => {
-    const position = this.isThumbRightDown ? 'right' : 'left';
-    
-    let newLeft = Math.abs(e.clientX - this.shiftX - this.subElements.inner.getBoundingClientRect()[position]);
-    
+  onThumbRightPointerMove = (e) => {
+    let newRight = this.subElements.inner.getBoundingClientRect().right - e.clientX - this.shiftX;
+
+    if (newRight < 0) {
+      newRight = 0;
+    }
+
+    let leftEdge = this.subElements.inner.offsetWidth - this.subElements.thumbLeft.offsetLeft;
+
+    if (newRight > leftEdge) {
+      newRight = leftEdge; 
+    }
+
+    const positionInPercents = this.calcPositionInPercents(newRight);
+    this.subElements.thumbRight.style.right = positionInPercents;
+    this.subElements.progress.style.right = positionInPercents;
+
+    const currentRangeValue = this.max - this.calcRangeValue(newRight);
+    this.selected.to = currentRangeValue;
+    this.subElements.to.textContent = this.formatValue(currentRangeValue);
+  }
+
+  onThumbLeftPointerMove = (e) => {
+    let newLeft = e.clientX - this.shiftX - this.subElements.inner.getBoundingClientRect().left;
+
     if (newLeft < 0) {
       newLeft = 0;
     }
-    console.log('onMouseMove', newLeft);
-    
-    const thumbName = this.isThumbRightDown ? 'thumbRight' : 'thumbLeft';
-    let rightEdge = this.subElements.inner.offsetWidth - this.subElements[thumbName].offsetWidth;
+
+    let rightEdge = this.subElements.thumbRight.offsetLeft;
 
     if (newLeft > rightEdge) {
-      newLeft = rightEdge;
+      newLeft = rightEdge; 
     }
 
-    this.subElements[thumbName].style[position] = this.calcPositionInPercents(newLeft);
-    this.subElements.progress.style[position] = this.calcPositionInPercents(newLeft);
-   
-    const textElement = this.isThumbRightDown ? 'to' : 'from';
-    const lastRange = this.isThumbRightDown ? this.max : this.min;
+    const positionInPercents = this.calcPositionInPercents(newLeft);
+    this.subElements.thumbLeft.style.left = positionInPercents;
+    this.subElements.progress.style.left = positionInPercents;
 
-    this.subElements[textElement].textContent = newLeft > 0 ? this.formatValue(Math.abs(this.selected[textElement] - this.calcRangeValue(newLeft))) : lastRange;
+    const currentRangeValue = this.min + this.calcRangeValue(newLeft);
+    this.selected.from = currentRangeValue;
+    this.subElements.from.textContent = this.formatValue(currentRangeValue);
+  }
+
+  onPointerMove = (e) => {
+    if (this.isThumbRightDown) {
+      this.onThumbRightPointerMove(e);
+    } else {
+      this.onThumbLeftPointerMove(e);
+    }
   }
 
   onMouseDown = (e) => {
@@ -106,16 +134,30 @@ export default class DoubleSlider {
     this.shiftX = Math.abs(e.clientX - thumbCoordinate);
 
     document.addEventListener('pointerup', this.onMouseUp);
-    document.addEventListener('pointermove', this.onMouseMove);
+    document.addEventListener('pointermove', this.onPointerMove);
+    document.addEventListener('range-select', this.onRangeSelect);
   }
 
-  onMouseUp = () => {
-    this.destroyListeners();
+  onRangeSelect = (e) => {
+    // TODO
+  }
+
+  onMouseUp = () => {    
+    let event = new CustomEvent("range-select", { 
+      bubbles: true,
+      detail: {
+        from: this.selected.from,
+        to: this.selected.to
+      }
+    });
+    this.element.dispatchEvent(event);
+    
     this.element.classList.remove('range-slider_dragging');
+    this.destroyListeners();
   }
 
   destroyListeners() {
-    document.removeEventListener('pointermove', this.onMouseMove);
+    document.removeEventListener('pointermove', this.onPointerMove);
     document.removeEventListener('pointerup', this.onMouseUp);
   }
 
