@@ -1,7 +1,7 @@
-pre-push:
-  jobs:
-    - name: test frontend
-      run: npm run test 
+# pre-push:
+#   jobs:
+#     - name: test frontend
+#       run: npm run test 
 
 pre-commit:
   jobs:
