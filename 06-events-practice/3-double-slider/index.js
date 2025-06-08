@@ -51,7 +51,7 @@ export default class DoubleSlider {
 
   createListeners() {
     this.subElements.inner.ondragstart = this.handleDragStart;
-    document.addEventListener('pointerdown', this.onMouseDown);
+    document.addEventListener('pointerdown', this.onPointerDown);
   }
 
   calcRangeValue (value) {
@@ -118,7 +118,7 @@ export default class DoubleSlider {
     }
   }
 
-  onMouseDown = (e) => {
+  onPointerDown = (e) => {
     const dataElement = e.target.dataset.element;
 
     if (dataElement !== 'thumbRight' && dataElement !== 'thumbLeft') {
@@ -133,7 +133,7 @@ export default class DoubleSlider {
     const thumbCoordinate = this.isThumbRightDown ? this.subElements.thumbRight.getBoundingClientRect().right : this.subElements.thumbLeft.getBoundingClientRect().left;
     this.shiftX = Math.abs(e.clientX - thumbCoordinate);
 
-    document.addEventListener('pointerup', this.onMouseUp);
+    document.addEventListener('pointerup', this.onPointerUp);
     document.addEventListener('pointermove', this.onPointerMove);
     document.addEventListener('range-select', this.onRangeSelect);
   }
@@ -142,7 +142,7 @@ export default class DoubleSlider {
     // TODO
   }
 
-  onMouseUp = () => {    
+  onPointerUp = () => {    
     let event = new CustomEvent("range-select", { 
       bubbles: true,
       detail: {
@@ -158,7 +158,7 @@ export default class DoubleSlider {
 
   destroyListeners() {
     document.removeEventListener('pointermove', this.onPointerMove);
-    document.removeEventListener('pointerup', this.onMouseUp);
+    document.removeEventListener('pointerup', this.onPointerUp);
   }
 
   remove() {
