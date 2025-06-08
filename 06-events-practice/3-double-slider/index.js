@@ -51,9 +51,6 @@ export default class DoubleSlider {
 
   createListeners() {
     this.subElements.inner.ondragstart = this.handleDragStart;
-
-    // this.subElements.thumbLeft.onmousedown = this.onMouseDown;
-
     document.addEventListener('pointerdown', this.onMouseDown);
   }
 
@@ -68,41 +65,51 @@ export default class DoubleSlider {
   }
 
   onMouseMove = (e) => {
-    console.log('onMouseMove', e.clientX);
-    let newLeft = e.clientX - this.shiftX - this.subElements.inner.getBoundingClientRect().left;
-
+    const position = this.isThumbRightDown ? 'right' : 'left';
+    
+    let newLeft = Math.abs(e.clientX - this.shiftX - this.subElements.inner.getBoundingClientRect()[position]);
+    
     if (newLeft < 0) {
       newLeft = 0;
     }
+    console.log('onMouseMove', newLeft);
+    
+    const thumbName = this.isThumbRightDown ? 'thumbRight' : 'thumbLeft';
+    let rightEdge = this.subElements.inner.offsetWidth - this.subElements[thumbName].offsetWidth;
 
-    let rightEdge = this.subElements.inner.offsetWidth - this.subElements.thumbLeft.offsetWidth;
     if (newLeft > rightEdge) {
       newLeft = rightEdge;
     }
 
-    this.subElements.thumbLeft.style.left = this.calcPositionInPercents(newLeft);
-    this.subElements.progress.style.left = this.calcPositionInPercents(newLeft);
+    this.subElements[thumbName].style[position] = this.calcPositionInPercents(newLeft);
+    this.subElements.progress.style[position] = this.calcPositionInPercents(newLeft);
    
-    this.subElements.from.textContent = newLeft > 0 ? this.formatValue(this.selected.from + this.calcRangeValue(newLeft)) : this.min;
+    const textElement = this.isThumbRightDown ? 'to' : 'from';
+    const lastRange = this.isThumbRightDown ? this.max : this.min;
+
+    this.subElements[textElement].textContent = newLeft > 0 ? this.formatValue(Math.abs(this.selected[textElement] - this.calcRangeValue(newLeft))) : lastRange;
   }
 
   onMouseDown = (e) => {
-   
     const dataElement = e.target.dataset.element;
-    
-    if (dataElement === 'thumbLeft') { 
-      console.log('onMouseDown');
-      e.preventDefault();
 
-      this.element.classList.add('range-slider_dragging');
-      this.shiftX = e.clientX - this.subElements.thumbLeft.getBoundingClientRect().left;
-
-      document.addEventListener('pointerup', this.onMouseUp);
-      document.addEventListener('pointermove', this.onMouseMove);
+    if (dataElement !== 'thumbRight' && dataElement !== 'thumbLeft') {
+      return;
     }
+    
+    e.preventDefault();
+
+    this.element.classList.add('range-slider_dragging');
+
+    this.isThumbRightDown = dataElement === 'thumbRight';
+    const thumbCoordinate = this.isThumbRightDown ? this.subElements.thumbRight.getBoundingClientRect().right : this.subElements.thumbLeft.getBoundingClientRect().left;
+    this.shiftX = Math.abs(e.clientX - thumbCoordinate);
+
+    document.addEventListener('pointerup', this.onMouseUp);
+    document.addEventListener('pointermove', this.onMouseMove);
   }
 
-  onMouseUp = (e) => {
+  onMouseUp = () => {
     this.destroyListeners();
     this.element.classList.remove('range-slider_dragging');
   }
