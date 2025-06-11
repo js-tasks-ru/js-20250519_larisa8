@@ -67,57 +67,33 @@ export default class DoubleSlider {
     this.subElements.thumbRight.addEventListener('pointerdown', this.onPointerDown);
   }
 
-  calcRangeValue (value) {
-    if (!value) {
-      return 0;
-    }
-
-    return Math.round(value * (this.max - this.min) / this.subElements.inner.offsetWidth);
-  }
-
   onThumbRightPointerMove = (e) => {
-    let newRight = this.subElements.inner.getBoundingClientRect().right - e.clientX - this.shiftX;
-
-    if (newRight < 0) {
-      newRight = 0;
-    }
-
-    let leftEdge = this.subElements.inner.offsetWidth - this.subElements.thumbLeft.offsetLeft;
-
-    if (newRight > leftEdge) {
-      newRight = leftEdge; 
-    }
-
-    const currentRangeValue = this.max - this.calcRangeValue(newRight);
-    this.selected.to = currentRangeValue;
-    this.subElements.to.textContent = this.formatValue(currentRangeValue);
-
-    const rightPercent = this.getRightPercent();
-    this.subElements.thumbRight.style.right = rightPercent;
-    this.subElements.progress.style.right = rightPercent;
+    this.selected.to = Math.max(this.selected.from, this.calcRangeValue(e));
+      
+    this.subElements.to.textContent = this.formatValue(this.selected.to);
+    this.subElements.thumbRight.style.right = this.getRightPercent();
+    this.subElements.progress.style.right = this.getRightPercent();
   }
 
   onThumbLeftPointerMove = (e) => {
-    let newLeft = e.clientX - this.shiftX - this.subElements.inner.getBoundingClientRect().left;
+    this.selected.from = Math.min(this.selected.to, this.calcRangeValue(e));
 
-    if (newLeft < 0) {
-      newLeft = 0;
-    }
-
-    let rightEdge = this.subElements.thumbRight.offsetLeft;
-
-    if (newLeft > rightEdge) {
-      newLeft = rightEdge; 
-    }
-
-    const currentRangeValue = this.min + this.calcRangeValue(newLeft);
-    this.selected.from = currentRangeValue;
-    this.subElements.from.textContent = this.formatValue(currentRangeValue);
-
-    const leftPercent = this.getLeftPercent();
-    this.subElements.thumbLeft.style.left = leftPercent;
-    this.subElements.progress.style.left = leftPercent;
+    this.subElements.from.textContent = this.formatValue(this.selected.from);
+    this.subElements.thumbLeft.style.left = this.getLeftPercent();
+    this.subElements.progress.style.left = this.getLeftPercent();
   }
+
+  calcRangeValue = (e) => {
+    const { left, width } = this.subElements.inner.getBoundingClientRect();
+
+    const innerLeftX = left;
+    const innerRightX = left + width;
+    const pointerX = e.clientX;
+    const normalizedPointerX = Math.min(innerRightX, Math.max(innerLeftX, pointerX));
+    const percentPointerX = Math.round(((normalizedPointerX - innerLeftX) / (innerRightX - innerLeftX)) * 100);
+
+    return this.min + ((this.max - this.min) * percentPointerX) / 100;
+  };
 
   onPointerMove = (e) => {
     if (this.isThumbRightDown) {
@@ -131,9 +107,6 @@ export default class DoubleSlider {
     this.element.classList.add('range-slider_dragging');
 
     this.isThumbRightDown = e.target.dataset.element === 'thumbRight';
-
-    const thumbCoordinate = this.isThumbRightDown ? this.subElements.thumbRight.getBoundingClientRect().right : this.subElements.thumbLeft.getBoundingClientRect().left;
-    this.shiftX = Math.abs(e.clientX - thumbCoordinate);
 
     document.addEventListener('pointerup', this.onPointerUp);
     document.addEventListener('pointermove', this.onPointerMove);
