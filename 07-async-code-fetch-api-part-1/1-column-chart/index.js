@@ -37,7 +37,7 @@ export default class ColumnChart extends ColumnChartV1 {
   }
 
   getUrl () {
-    const url = new URL(BACKEND_URL);
+    const url = new URL(this.url, BACKEND_URL);
     url.pathname = this.url;
     url.searchParams.set('from', this.from);
     url.searchParams.set('to', this.to);
