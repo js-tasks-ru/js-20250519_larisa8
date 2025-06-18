@@ -30,7 +30,7 @@ export default class SortableTable extends SortableTableV2 {
     this.url = url;
 
     this.initPageParams(pageParams);
-    this.initData();
+    this.init();
     this.addScrollEvent();
   }
 
@@ -40,11 +40,14 @@ export default class SortableTable extends SortableTableV2 {
     this.end = start + size;
   }
 
-  async initData () {
+  async init () {
     if (this.isSortLocally) {
       this.data = await this.loadData();
+      this.sort(this.sorted.id, this.sorted.order);
+      this.displayPlaceholder();
+    } else {
+      this.sort(this.sorted.id, this.sorted.order);
     }
-    this.sort(this.sorted.id, this.sorted.order);
   }
 
   async loadData() {
@@ -79,6 +82,7 @@ export default class SortableTable extends SortableTableV2 {
 
   showLoading() {
     this.isLoading = true;
+    this.displayPlaceholder();
     this.showSubElement('loading');
   }
 
