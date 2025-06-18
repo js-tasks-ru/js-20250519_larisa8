@@ -15,8 +15,7 @@ export default class SortableTable extends SortableTableV2 {
     isSortLocally = false,
     pageParams = {
       start: 0,
-      size: 30,
-      end: 30
+      size: 30
     }
   } = {}) {
     
@@ -29,15 +28,19 @@ export default class SortableTable extends SortableTableV2 {
     );
 
     this.url = url;
-    this.start = 0;
-    this.size = 30;
-    this.end = this.start + this.size;
 
-    this.init();
+    this.initPageParams(pageParams);
+    this.initData();
     this.addScrollEvent();
   }
 
-  async init () {
+  initPageParams({ start, size } = {}) {
+    this.start = start;
+    this.size = size;
+    this.end = start + size;
+  }
+
+  async initData () {
     if (this.isSortLocally) {
       this.data = await this.loadData();
     }
