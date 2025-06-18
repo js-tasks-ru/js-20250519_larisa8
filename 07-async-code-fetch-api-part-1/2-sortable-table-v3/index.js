@@ -1,20 +1,182 @@
 import fetchJson from './utils/fetch-json.js';
-
+import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
-export default class SortableTable {
+export default class SortableTable extends SortableTableV2 {
+  isScroll = true;
+  isLoading = false;
+
   constructor(headersConfig, {
-    data = [],
-    sorted = {}
+    sorted = {
+      id: '',
+      order: 'asc'
+    },
+    url = '',
+    isSortLocally = false,
+    pageParams = {
+      start: 0,
+      size: 30,
+      end: 30
+    }
   } = {}) {
+    
+    super(
+      headersConfig, {
+        url,
+        sorted,
+        isSortLocally
+      }
+    );
 
+    this.url = url;
+    this.start = 0;
+    this.size = 30;
+    this.end = this.start + this.size;
+
+    this.init();
+    this.addScrollEvent();
   }
 
-  sortOnClient (id, order) {
-
+  async init () {
+    if (this.isSortLocally) {
+      this.data = await this.loadData();
+    }
+    this.sort(this.sorted.id, this.sorted.order);
   }
 
-  sortOnServer (id, order) {
+  async loadData() {
+    let data = [];
 
+    if (!this.url) {
+      return data;
+    }
+
+    try {
+      this.showLoading();
+      data = await fetchJson(this.getUrl());
+      this.hideLoading();
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
+
+    return data;
+  }
+
+  getUrl () {
+    const url = new URL(this.url, BACKEND_URL);
+
+    url.searchParams.set('_order', this.sorted.order);
+    url.searchParams.set('_sort', this.sorted.fieldName);
+    url.searchParams.set('_start', this.start);
+    url.searchParams.set('_end', this.end);
+
+    return url.href;
+  }
+
+  showLoading() {
+    this.isLoading = true;
+    this.showSubElement('loading');
+  }
+
+  hideLoading() {
+    this.isLoading = false;
+    this.hideSubElement('loading');
+  }
+
+  showSubElement(name) {
+    this.subElements[name].style.display = 'block';
+  }
+
+  hideSubElement(name) {
+    this.subElements[name].style.display = 'none';
+  }
+
+  sort (fieldName, sortOrder) {
+    if (!fieldName) {
+      fieldName = this.config.find(item => item.sortable).id;
+    }
+
+    super.sort(fieldName, sortOrder);
+    this.isScroll = true;
+  }
+
+  async sortOnServer(sortField, sortOrder) {
+    let config = this.config.filter((columnConfig) => columnConfig.id === sortField);
+
+    if (!config[0].sortable) {
+      return;
+    }
+
+    this.sorted = {
+      fieldName: sortField,
+      order: sortOrder
+    };
+
+    await this.render();
+  }
+
+  async render () {
+    this.data = await this.loadData();
+    this.subElements.header.innerHTML = this.createTableHeaderTemplate();
+    this.subElements.body.innerHTML = this.createTableBodyTemplate();
+    this.displayPlaceholder();
+  }
+
+  displayPlaceholder() {
+    if (!this.data.length && !this.isLoading) {
+      this.showSubElement('emptyPlaceholder');
+    } else {
+      this.hideSubElement('emptyPlaceholder');
+    }
+  }
+
+  addScrollEvent() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = async () => {
+    if (this.isSortLocally) {
+      return;
+    }
+
+    while (this.isScroll) {
+      let { top, bottom } = document.documentElement.getBoundingClientRect();
+
+      if (top === 0) {
+        this.resetPageParams();
+      }
+
+      if (bottom > document.documentElement.clientHeight + 100) {
+        break;
+      }
+      
+      this.start = this.end;
+      this.end = this.start + this.size;
+      this.isScroll = false;
+
+      const data = await this.loadData();
+
+      if (data.length) {
+        this.data = data;
+      }
+
+      this.subElements.body.insertAdjacentHTML("beforeend", this.createTableBodyTemplate());
+      this.isScroll = data.length > 0;
+
+      if (!this.isScroll) {
+        this.resetPageParams();
+      }
+    }
+  }
+
+  resetPageParams () {
+    this.start = 0;
+    this.end = this.size;
+  }
+
+  destroyListeners() {
+    super.destroyListeners();
+    window.removeEventListener('scroll', this.handleScroll);
   }
 }
