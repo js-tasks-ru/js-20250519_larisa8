@@ -32,7 +32,6 @@ export default class SortableTable extends SortableTableV2 {
 
     this.initPageParams(pageParams);
     this.init();
-    this.addScrollEvent();
   }
 
   initPageParams({ start, size } = {}) {
@@ -139,11 +138,7 @@ export default class SortableTable extends SortableTableV2 {
     }
   }
 
-  addScrollEvent() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll = async () => {
+  async handleScroll() {
     if (this.isSortLocally || !this.isScroll || this.isLoading) {
       return;
     }
@@ -185,6 +180,12 @@ export default class SortableTable extends SortableTableV2 {
     if (this.isLoading) {
       this.controller.abort();
     }
+  }
+
+  createListeners() {
+    this.handleScroll = this.handleScroll.bind(this);
+    window.addEventListener('scroll', this.handleScroll);
+    super.createListeners();
   }
 
   destroyListeners() {
