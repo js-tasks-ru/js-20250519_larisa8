@@ -28,6 +28,7 @@ export default class SortableTable extends SortableTableV2 {
     );
 
     this.url = url;
+    this.controller = new AbortController();
 
     this.initPageParams(pageParams);
     this.init();
@@ -40,7 +41,7 @@ export default class SortableTable extends SortableTableV2 {
     this.end = start + size;
   }
 
-  async init () {
+  async init() {
     if (this.isSortLocally) {
       this.data = await this.loadData();
       this.sort(this.sorted.id, this.sorted.order);
@@ -59,7 +60,7 @@ export default class SortableTable extends SortableTableV2 {
 
     try {
       this.showLoading();
-      data = await fetchJson(this.getUrl());
+      data = await fetchJson(this.getUrl(), { signal: this.controller.signal });
       this.hideLoading();
       return data;
     } catch (err) {
@@ -69,7 +70,7 @@ export default class SortableTable extends SortableTableV2 {
     return data;
   }
 
-  getUrl () {
+  getUrl() {
     const url = new URL(this.url, BACKEND_URL);
 
     url.searchParams.set('_order', this.sorted.order);
@@ -99,7 +100,7 @@ export default class SortableTable extends SortableTableV2 {
     this.subElements[name].style.display = 'none';
   }
 
-  sort (fieldName, sortOrder) {
+  sort(fieldName, sortOrder) {
     if (!fieldName) {
       fieldName = this.config.find(item => item.sortable).id;
     }
@@ -123,7 +124,7 @@ export default class SortableTable extends SortableTableV2 {
     await this.render();
   }
 
-  async render () {
+  async render() {
     this.data = await this.loadData();
     this.subElements.header.innerHTML = this.createTableHeaderTemplate();
     this.subElements.body.innerHTML = this.createTableBodyTemplate();
@@ -175,12 +176,19 @@ export default class SortableTable extends SortableTableV2 {
     }
   }
 
-  resetPageParams () {
+  resetPageParams() {
     this.start = 0;
     this.end = this.size;
   }
 
+  abortRequest() {
+    if (this.isLoading) {
+      this.controller.abort();
+    }
+  }
+
   destroyListeners() {
+    this.abortRequest();
     super.destroyListeners();
     window.removeEventListener('scroll', this.handleScroll);
   }
