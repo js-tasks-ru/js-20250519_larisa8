@@ -36,11 +36,11 @@ export default class SortableTable extends SortableTableV1 {
     super.sort(sortField, sortOrder);
   }
 
-  sort(sortField, sortOrder) {
+  sort(sortField, sortOrder) {  
     if (this.isSortLocally) { 
       this.sortOnClient(sortField, sortOrder);
     } else {
-      this.sortOnServer();
+      this.sortOnServer(sortField, sortOrder);
     }
   }
 
@@ -50,12 +50,10 @@ export default class SortableTable extends SortableTableV1 {
   }
 
   createListeners() {
-    this.subElements.header.addEventListener('click', this.handleHeaderCellClick);
     this.subElements.header.addEventListener('pointerdown', this.handleHeaderCellClick);
   }
 
   destroyListeners() {
-    this.subElements.header.removeEventListener('click', this.handleHeaderCellClick);
     this.subElements.header.removeEventListener('pointerdown', this.handleHeaderCellClick);
   }
 
