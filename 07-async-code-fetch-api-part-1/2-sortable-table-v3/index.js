@@ -143,37 +143,35 @@ export default class SortableTable extends SortableTableV2 {
   }
 
   handleScroll = async () => {
-    if (this.isSortLocally) {
+    if (this.isSortLocally || !this.isScroll || this.isLoading) {
       return;
     }
 
-    while (this.isScroll) {
-      let { top, bottom } = document.documentElement.getBoundingClientRect();
+    let { top, bottom } = document.documentElement.getBoundingClientRect();
 
-      if (top === 0) {
-        this.resetPageParams();
-      }
+    if (top === 0) {
+      this.resetPageParams();
+    }
 
-      if (bottom > document.documentElement.clientHeight + 100) {
-        break;
-      }
-      
-      this.start = this.end;
-      this.end = this.start + this.size;
-      this.isScroll = false;
+    if (bottom > document.documentElement.clientHeight + 100) {
+      return;
+    }
+    
+    this.start = this.end;
+    this.end = this.start + this.size;
 
-      const data = await this.loadData();
+    const data = await this.loadData();
 
-      if (data.length) {
-        this.data = data;
-      }
+    if (data.length) {
+      this.data = data;
+    }
 
-      this.subElements.body.insertAdjacentHTML("beforeend", this.createTableBodyTemplate());
-      this.isScroll = data.length > 0;
+    this.subElements.body.insertAdjacentHTML("beforeend", this.createTableBodyTemplate());
+    
+    this.isScroll = data.length > 0;
 
-      if (!this.isScroll) {
-        this.resetPageParams();
-      }
+    if (!this.isScroll) {
+      this.resetPageParams();
     }
   }
 
