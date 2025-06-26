@@ -26,9 +26,7 @@ export default class ProductForm {
     status: 1
   }) {
     this.product = {
-      ...data,
-      title: escapeHtml(data.title),
-      description: escapeHtml(data.description)
+      ...data
     };
   }
 
@@ -83,12 +81,12 @@ export default class ProductForm {
           <div class="form-group form-group__half_left">
             <fieldset>
               <label class="form-label">Название товара</label>
-              <input id="title" required="" type="text" name="title" class="form-control" placeholder="Название товара" value="${title}">
+              <input id="title" required="" type="text" name="title" class="form-control" placeholder="Название товара" value="${escapeHtml(title)}">
             </fieldset>
           </div>
           <div class="form-group form-group__wide">
             <label class="form-label">Описание</label>
-            <textarea id="description" required="" class="form-control" name="description" data-element="productDescription" placeholder="Описание товара">${description}</textarea>
+            <textarea id="description" required="" class="form-control" name="description" data-element="productDescription" placeholder="Описание товара">${escapeHtml(description)}</textarea>
           </div>
           <div class="form-group form-group__wide" data-element="sortable-list-container">
             <label class="form-label">Фото</label>
@@ -106,16 +104,16 @@ export default class ProductForm {
           <div class="form-group form-group__half_left form-group__two-col">
             <fieldset>
               <label class="form-label">Цена ($)</label>
-              <input id="price" required="" type="number" name="price" class="form-control" placeholder="100" value="${price}">
+              <input id="price" required="" type="number" name="price" class="form-control" placeholder="100" value="${escapeHtml(price.toString())}">
             </fieldset>
             <fieldset>
               <label class="form-label">Скидка ($)</label>
-              <input id="discount" required="" type="number" name="discount" class="form-control" placeholder="0" value="${discount}">
+              <input id="discount" required="" type="number" name="discount" class="form-control" placeholder="0" value="${escapeHtml(discount.toString())}">
             </fieldset>
           </div>
           <div class="form-group form-group__part-half">
             <label class="form-label">Количество</label>
-            <input id="quantity" required="" type="number" class="form-control" name="quantity" placeholder="1" value="${quantity}">
+            <input id="quantity" required="" type="number" class="form-control" name="quantity" placeholder="1" value="${escapeHtml(quantity.toString())}">
           </div>
           <div class="form-group form-group__part-half">
             <label class="form-label">Статус</label>
@@ -136,12 +134,12 @@ export default class ProductForm {
   createImageListTemplate() {
     const imageList = this.product.images.map(({ url, source }, index) => `
       <li class="products-edit__imagelist-item sortable-list__item" style="">
-        <input type="hidden" name="url" value="${url}">
-        <input type="hidden" name="source" value="${source}">
+        <input type="hidden" name="url" value="${escapeHtml(url)}">
+        <input type="hidden" name="source" value="${escapeHtml(source)}">
         <span>
           <img src="icon-grab.svg" data-grab-handle="" alt="grab">
-          <img class="sortable-table__cell-img" alt="Image" src="${url}">
-          <span>${source}</span>
+          <img class="sortable-table__cell-img" alt="Image" src="${escapeHtml(url)}">
+          <span>${escapeHtml(source)}</span>
         </span>
         <button type="button">
           <img src="icon-trash.svg" data-index=${index} data-delete-handle="" alt="delete">
@@ -165,7 +163,7 @@ export default class ProductForm {
   getOptionsTemplate(options, selected) {
     return options.map(([key, value]) => {
       const isSelected = key == selected ? 'selected' : '';
-      return `<option ${isSelected} value="${key}">${value}</option>`;
+      return `<option ${isSelected} value="${escapeHtml(key)}">${escapeHtml(value)}</option>`;
     }).join('');
   }
 
@@ -199,8 +197,6 @@ export default class ProductForm {
   }
 
   async save() {
-    let data = {};
-
     try {
       const formData = new FormData(this.subElements.productForm);
 
@@ -208,30 +204,13 @@ export default class ProductForm {
         formData.append('productId', this.productId);
       }
 
-      formData.forEach((value, key) => data[key] = value);
-
-      const { title, description, subcategory, price, discount, quantity, status, productId } = data;
-      const newProductData = {
-        title: escapeHtml(title),
-        description: escapeHtml(description),
-        images: this.product.images,
-        subcategory,
-        price,
-        discount,
-        quantity,
-        status,
-        productId
-      };
-
       await fetchJson(new URL('api/rest/products', BACKEND_URL), {
         method: this.isEdit ? 'PATCH' : 'PUT',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(newProductData)
+        body: formData
       });
 
-      this.setProduct(newProductData);
+      const data = Object.fromEntries(formData.entries());
+      this.setProduct(data);
     } catch (err) {
       console.error(err);
     } finally {
