@@ -33,8 +33,6 @@ export default class RangePicker {
   createListeners() {
     this.subElements.selector.addEventListener("click", this.handleSelectorClick, true);
     this.subElements.input.addEventListener("click", this.handleInputClick);
-    
-
     document.addEventListener("click", this.handleOutsideClick, true);
   }
 
@@ -235,7 +233,6 @@ export default class RangePicker {
       weekday: 'long',
     });
   }
-
 
   getMonthName(monthNumber) {
     const date = new Date();
