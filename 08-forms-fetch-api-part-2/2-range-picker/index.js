@@ -24,6 +24,10 @@ export default class RangePicker {
     return element.firstElementChild;
   }
 
+  formatDate(date) {
+    return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
   selectSubElements() {
     this.element.querySelectorAll('[data-element]').forEach(element => {
       this.subElements[element.dataset.element] = element;
@@ -59,8 +63,8 @@ export default class RangePicker {
       this.to = new Date(rangePickerCell.dataset.value);
       this.year = this.to.getFullYear();
       
-      this.subElements.from.textContent = this.from.toLocaleDateString();
-      this.subElements.to.textContent = this.to.toLocaleDateString();
+      this.subElements.from.textContent = this.formatDate(this.from);
+      this.subElements.to.textContent = this.formatDate(this.to);
 
       this.closeRangePicker();
     }
@@ -266,8 +270,8 @@ export default class RangePicker {
     return `
       <div class="rangepicker">
         <div class="rangepicker__input" data-element="input">
-          <span data-element="from">${this.from.toLocaleDateString()}</span> -
-          <span data-element="to">${this.to.toLocaleDateString()}</span>
+          <span data-element="from">${this.formatDate(this.from)}</span> -
+          <span data-element="to">${this.formatDate(this.to)}</span>
         </div>
         <div class="rangepicker__selector" data-element="selector"></div>
       </div>
