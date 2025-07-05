@@ -1,3 +1,4 @@
+import fetchJson from './utils/fetch-json.js';
 import SortableTableV2 from '../../06-events-practice/1-sortable-table-v2/index.js';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
@@ -56,15 +57,9 @@ export default class SortableTable extends SortableTableV2 {
       return data;
     }
 
-    try {
-      this.showLoading();
-      const response = await fetch(this.getUrl(), { signal: this.controller.signal });
-      data = await response.json();
-      this.hideLoading();
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+    this.showLoading();
+    data = await fetchJson(this.getUrl(), { signal: this.controller.signal });
+    this.hideLoading();
 
     return data;
   }
