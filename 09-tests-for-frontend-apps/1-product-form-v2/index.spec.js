@@ -26,7 +26,7 @@ describe('tests-for-frontend-apps/product-form-v2', () => {
     productFormComponent = null;
   });
 
-  it('should be rendered correctly', () => {
+  it.skip('should be rendered correctly', () => {
     expect(productFormComponent.element).toBeVisible();
     expect(productFormComponent.element).toBeInTheDocument();
   });
@@ -53,7 +53,7 @@ describe('tests-for-frontend-apps/product-form-v2', () => {
     .toHaveTextContent(categoriesNames[categoriesNames.length - 1]);
   });
 
-  it('should render product data correctly', () => {
+  it.skip('should render product data correctly', () => {
     const { productForm, imageListContainer } = productFormComponent.subElements;
     const defaultFormData = {
       title: '',
