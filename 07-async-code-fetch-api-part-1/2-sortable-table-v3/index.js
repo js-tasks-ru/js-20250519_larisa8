@@ -57,14 +57,9 @@ export default class SortableTable extends SortableTableV2 {
       return data;
     }
 
-    try {
-      this.showLoading();
-      data = await fetchJson(this.getUrl(), { signal: this.controller.signal });
-      this.hideLoading();
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+    this.showLoading();
+    data = await fetchJson(this.getUrl(), { signal: this.controller.signal });
+    this.hideLoading();
 
     return data;
   }
