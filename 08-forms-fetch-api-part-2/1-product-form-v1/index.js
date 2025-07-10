@@ -196,6 +196,27 @@ export default class ProductForm {
     this.save();
   }
 
+  convertFormDataToProductData(formData) {
+    const data = Object.fromEntries(formData.entries());
+    
+    delete data.source;
+    delete data.url;
+
+    data.images = [];
+
+    const urls = formData.getAll('url');
+    const sources = formData.getAll('source');
+
+    urls.forEach((url, index) => {
+      data.images.push({
+        url,
+        source: sources[index]
+      });
+    });
+
+    return data;
+  }
+
   async save() {
     try {
       const formData = new FormData(this.subElements.productForm);
@@ -209,12 +230,14 @@ export default class ProductForm {
         body: formData
       });
 
-      const data = Object.fromEntries(formData.entries());
-      this.setProduct(data);
+      this.setProduct({
+        ...this.product,
+        ...this.convertFormDataToProductData(formData)
+      });
+
+      this.dispatchProductEvent();
     } catch (err) {
       console.error(err);
-    } finally {
-      this.dispatchProductEvent();
     }
   }
 
