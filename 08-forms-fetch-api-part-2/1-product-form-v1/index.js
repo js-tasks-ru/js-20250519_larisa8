@@ -188,7 +188,7 @@ export default class ProductForm {
   createListeners() {
     this.subElements.productForm.onsubmit = this.handleSubmit;
     this.subElements.productForm.elements.uploadImageButton.onclick = this.handleUploadImageButtonClick;
-    this.subElements.imageListContainer.onclick = this.handleImageListContainerClick;
+    this.subElements.imageListContainer.addEventListener('pointerdown', this.handleImageListContainerPointerDown);
   }
 
   handleSubmit = (event) => {
@@ -214,7 +214,7 @@ export default class ProductForm {
       });
     });
 
-    return data;
+    return Object.assign(this.product, data);
   }
 
   async save() {
@@ -231,7 +231,6 @@ export default class ProductForm {
       });
 
       this.setProduct({
-        ...this.product,
         ...this.convertFormDataToProductData(formData)
       });
 
@@ -288,7 +287,7 @@ export default class ProductForm {
     } 
   }
 
-  handleImageListContainerClick = (event) => {
+  handleImageListContainerPointerDown = (event) => {
     const dataset = event.target.dataset;
 
     if (dataset.deleteHandle !== '') {
@@ -310,7 +309,7 @@ export default class ProductForm {
   destroyListeners() {
     this.subElements.productForm.onsubmit = null;
     this.subElements.productForm.elements.uploadImageButton.onclick = null;
-    this.subElements.imageListContainer.onclick = null;
+    this.subElements.imageListContainer.removeEventListener('pointerdown', this.handleImageListContainerPointerDown);
   }
 
   destroy() {
