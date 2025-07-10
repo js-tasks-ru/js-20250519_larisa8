@@ -9,14 +9,22 @@ export default class SortableList {
   }
 
   createListeners() {
-    document.addEventListener('pointerdown', this.handlePointerDown);
+    document.addEventListener('pointerdown', this.handlePointerDown, { 
+      bubbles: true,
+      which: 1
+    });
+  }
+
+  deleteItem = (element) => {
+    const itemElement = element.closest('.sortable-list__item');
+    const listElement = document.querySelector('.sortable-list');
+    itemElement.remove();
+    this.items = listElement.children;
   }
 
   handlePointerDown = (event) => {
     if (event.target.dataset.deleteHandle === '') {
-      event.target.closest('.sortable-list__item').remove();
-      this.items = this.element.children;
-      return;
+      this.deleteItem(event.target);
     }
 
     if (event.target.dataset.grabHandle !== '') {
@@ -24,10 +32,16 @@ export default class SortableList {
     }
 
     let dragElement = event.target.closest('.sortable-list__item');
-
+    
     if (!dragElement) {
       return;
     }
+
+    event.preventDefault();
+
+    dragElement.ondragstart = function() {
+      return false;
+    };
     
     this.dragElement = dragElement.cloneNode(true);
     
@@ -45,7 +59,7 @@ export default class SortableList {
     this.isDragging = true;
 
     document.addEventListener('pointermove', this.handlePointerMove);
-    document.addEventListener('pointerup', this.handlePointerUp);
+    this.dragElement.addEventListener('pointerup', this.handlePointerUp);
 
     this.shiftX = clientX - element.getBoundingClientRect().left;
     this.shiftY = clientY - element.getBoundingClientRect().top;
@@ -54,7 +68,8 @@ export default class SortableList {
     this.dragElement.style.height = element.offsetHeight + 'px';
     this.dragElement.classList.add('sortable-list__item_dragging');
     
-    this.element.append(this.dragElement);
+    const listElement = document.querySelector('.sortable-list');
+    listElement.append(this.dragElement);
 
     this.moveAt(clientX, clientY);
   }
@@ -84,7 +99,7 @@ export default class SortableList {
   }
 
   replacePlaceHolder(node) {
-    const placeholder = this.element.querySelector('.sortable-list__placeholder');
+    const placeholder = document.querySelector('.sortable-list__placeholder');
     placeholder.replaceWith(node);
   }
 
@@ -116,10 +131,12 @@ export default class SortableList {
     this.dragElement.style = null;
 
     this.replacePlaceHolder(this.dragElement);
-    this.items = this.element.children;
+
+    const listElement = document.querySelector('.sortable-list');
+    this.items = listElement.children;
 
     document.removeEventListener('pointermove', this.handlePointerMove);
-    document.removeEventListener('pointerup', this.handlePointerUp);
+    this.dragElement.removeEventListener('pointerup', this.handlePointerUp);
   }
 
   createList() {
@@ -144,7 +161,10 @@ export default class SortableList {
   }
 
   destroyListeners() {
-    document.removeEventListener('pointerdown', this.handlePointerDown);
+    document.removeEventListener('pointerdown', this.handlePointerDown, { 
+      bubbles: true,
+      which: 1
+    });
   }
 
   destroy() {
