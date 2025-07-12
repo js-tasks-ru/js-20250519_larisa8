@@ -288,6 +288,7 @@ export default class RangePicker {
   }
 
   destroyListeners() {
+    this.subElements.selector.removeEventListener("click", this.handleSelectorClick, true);
     this.subElements.input.removeEventListener("click", this.handleInputClick);
     document.removeEventListener("click", this.handleOutsideClick, true);
   }
