@@ -188,12 +188,33 @@ export default class ProductForm {
   createListeners() {
     this.subElements.productForm.onsubmit = this.handleSubmit;
     this.subElements.productForm.elements.uploadImageButton.onclick = this.handleUploadImageButtonClick;
-    this.subElements.imageListContainer.onclick = this.handleImageListContainerClick;
+    this.subElements.imageListContainer.addEventListener('pointerdown', this.handleImageListContainerPointerDown);
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
     this.save();
+  }
+
+  convertFormDataToProductData(formData) {
+    const data = Object.fromEntries(formData.entries());
+    
+    delete data.source;
+    delete data.url;
+
+    data.images = [];
+
+    const urls = formData.getAll('url');
+    const sources = formData.getAll('source');
+
+    urls.forEach((url, index) => {
+      data.images.push({
+        url,
+        source: sources[index]
+      });
+    });
+
+    return Object.assign(this.product, data);
   }
 
   async save() {
@@ -209,12 +230,13 @@ export default class ProductForm {
         body: formData
       });
 
-      const data = Object.fromEntries(formData.entries());
-      this.setProduct(data);
+      this.setProduct({
+        ...this.convertFormDataToProductData(formData)
+      });
+
+      this.dispatchProductEvent();
     } catch (err) {
       console.error(err);
-    } finally {
-      this.dispatchProductEvent();
     }
   }
 
@@ -265,7 +287,7 @@ export default class ProductForm {
     } 
   }
 
-  handleImageListContainerClick = (event) => {
+  handleImageListContainerPointerDown = (event) => {
     const dataset = event.target.dataset;
 
     if (dataset.deleteHandle !== '') {
@@ -287,7 +309,7 @@ export default class ProductForm {
   destroyListeners() {
     this.subElements.productForm.onsubmit = null;
     this.subElements.productForm.elements.uploadImageButton.onclick = null;
-    this.subElements.imageListContainer.onclick = null;
+    this.subElements.imageListContainer.removeEventListener('pointerdown', this.handleImageListContainerPointerDown);
   }
 
   destroy() {
