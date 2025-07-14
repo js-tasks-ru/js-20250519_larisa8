@@ -26,7 +26,6 @@ export default class ProductForm {
     status: 1
   }) {
     Object.assign(this.product, data);
-    console.dir(this.product);
   }
 
   async render() {
