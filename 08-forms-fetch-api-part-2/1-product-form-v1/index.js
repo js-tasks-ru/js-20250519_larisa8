@@ -7,15 +7,15 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ProductForm {
   subElements = {};
+  product = {};
 
   constructor (productId) {
     this.productId = productId;
     this.isEdit = this.productId;
     this.fileElements = [];
-    this.setProduct();
   }
 
-  setProduct (data = {
+  setProduct(data = {
     title: '',
     description: '',
     images: [],
@@ -25,12 +25,10 @@ export default class ProductForm {
     quantity: 1,
     status: 1
   }) {
-    this.product = {
-      ...data
-    };
+    Object.assign(this.product, data);
   }
 
-  async render () {
+  async render() {
     await this.getCategories();
     await this.getProductById();
     this.element = this.createElement(this.createTemplate());
@@ -214,7 +212,7 @@ export default class ProductForm {
       });
     });
 
-    return Object.assign(this.product, data);
+    return data;
   }
 
   async save() {
@@ -230,9 +228,7 @@ export default class ProductForm {
         body: formData
       });
 
-      this.setProduct({
-        ...this.convertFormDataToProductData(formData)
-      });
+      this.setProduct(this.convertFormDataToProductData(formData));
 
       this.dispatchProductEvent();
     } catch (err) {

@@ -16,9 +16,7 @@ export default class ProductForm extends ProductFormV1 {
 
   handlePointerUp = () => {
     const formData = new FormData(this.subElements.productForm);
-    this.setProduct({
-      ...this.convertFormDataToProductData(formData)
-    });
+    this.setProduct(this.convertFormDataToProductData(formData));
   }
 
   getImageList() {
