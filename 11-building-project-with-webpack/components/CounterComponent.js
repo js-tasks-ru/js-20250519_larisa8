@@ -5,33 +5,33 @@ export default class CounterComponent extends BaseComponent {
     counter = 0;
 
     constructor(props) {
-        super(props);
+      super(props);
 
-        this.counter = props.counter;
+      this.counter = props.counter;
     }
 
     handleButtonIncrementClick = () => {
-        this.counter += 1;
-        this.subElements.input.value = this.counter;
+      this.counter += 1;
+      this.subElements.input.value = this.counter;
     }
 
     handleButtonDecrementClick = () => {
-        this.counter -= 1;
-        this.subElements.input.value = this.counter;
+      this.counter -= 1;
+      this.subElements.input.value = this.counter;
     }
 
     createEventListeners() {
-        this.subElements.increment.addEventListener('click', this.handleButtonIncrementClick);
-        this.subElements.decrement.addEventListener('click', this.handleButtonDecrementClick);
+      this.subElements.increment.addEventListener('click', this.handleButtonIncrementClick);
+      this.subElements.decrement.addEventListener('click', this.handleButtonDecrementClick);
     }
 
     destroyEventListeners() {
-        this.subElements.increment.removeEventListener('click', this.handleButtonIncrementClick);
-        this.subElements.decrement.removeEventListener('click', this.handleButtonDecrementClick);
+      this.subElements.increment.removeEventListener('click', this.handleButtonIncrementClick);
+      this.subElements.decrement.removeEventListener('click', this.handleButtonDecrementClick);
     }
 
     createTemplate() {
-        return `
+      return `
             <div>
                 <button data-element="decrement">-</button>
                 <input data-element="input" type="text" value="${this.counter}" />
@@ -41,12 +41,12 @@ export default class CounterComponent extends BaseComponent {
     }
 
     render(...args) {
-        super.render(...args);
-        this.createEventListeners();
+      super.render(...args);
+      this.createEventListeners();
     }
 
     destroy() {
-        super.destroy();
-        this.destroyEventListeners();
+      super.destroy();
+      this.destroyEventListeners();
     }
 }

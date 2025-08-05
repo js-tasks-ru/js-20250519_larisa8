@@ -1,11 +1,11 @@
 import BaseComponent from "./BaseComponent.js";
 
 export default class YoutubeComponent extends BaseComponent {
-    createTemplate() {
-        const [code] = this.routeParams;
+  createTemplate() {
+    const [code] = this.routeParams;
 
-        return (
-            `<iframe 
+    return (
+      `<iframe 
                 width="560"
                 height="315" 
                 src="https://www.youtube.com/embed/${code}" 
@@ -13,6 +13,6 @@ export default class YoutubeComponent extends BaseComponent {
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
             </iframe>`
-        )
-    }
+    );
+  }
 }

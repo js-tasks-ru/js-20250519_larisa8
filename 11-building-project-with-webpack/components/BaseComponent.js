@@ -9,7 +9,6 @@ export default class BaseComponent {
     }
 
     selectSubElements() {
-      console.log('selectSubEle');
       const elements = this.element.querySelectorAll('[data-element]');
 
       for (const element of elements) {
@@ -31,7 +30,6 @@ export default class BaseComponent {
     }
 
     async render(container, routeParams) {
-      console.log(container, routeParams);
       this.routeParams = routeParams;
       this.element = this.createElement(this.createTemplate());
       this.selectSubElements();

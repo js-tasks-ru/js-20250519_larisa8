@@ -35,7 +35,6 @@ export default class RangePickerComponent extends BaseComponent {
   }
 
   createListeners() {
-    console.log('dsds');
     this.subElements.selector.addEventListener("click", this.handleSelectorClick, true);
     this.subElements.input.addEventListener("click", this.handleInputClick);
     document.addEventListener("click", this.handleOutsideClick, true);
