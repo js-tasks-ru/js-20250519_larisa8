@@ -1,4 +1,4 @@
-import BaseComponent from "./BaseComponent.js";
+import BaseComponent from "../BaseComponent.js";
 
 export default class RangePickerComponent extends BaseComponent {
   subElements = {};
@@ -66,6 +66,7 @@ export default class RangePickerComponent extends BaseComponent {
       this.subElements.from.textContent = this.formatDate(this.from);
       this.subElements.to.textContent = this.formatDate(this.to);
 
+      this.dispatchEvent();
       this.closeRangePicker();
     }
   }
@@ -288,7 +289,7 @@ export default class RangePickerComponent extends BaseComponent {
     this.remove();
   }
 
-  render(...args) {
+  async render(...args) {
     super.render(...args);
     this.createListeners();
   }
@@ -297,5 +298,15 @@ export default class RangePickerComponent extends BaseComponent {
     this.subElements.selector.removeEventListener("click", this.handleSelectorClick, true);
     this.subElements.input.removeEventListener("click", this.handleInputClick);
     document.removeEventListener("click", this.handleOutsideClick, true);
+  }
+
+  dispatchEvent() {
+    document.dispatchEvent(new CustomEvent('date-select', {
+      bubbles: true,
+      detail: {
+        from: this.from,
+        to: this.to
+      }
+    }));
   }
 }

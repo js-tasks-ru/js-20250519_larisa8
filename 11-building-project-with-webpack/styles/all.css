@@ -1,5 +1,6 @@
 @import url("common.css");
 
 /* Styles for components  */
-@import url("../../08-forms-fetch-api-part-2/2-range-picker/style.css");
-@import url("../../07-async-code-fetch-api-part-1/1-column-chart/style.css");
+@import url("../components/RangePickerComponent/style.css");
+@import url("../components/ChartComponent/style.css");
+@import url("../components/SortableTableComponent/style.css");
