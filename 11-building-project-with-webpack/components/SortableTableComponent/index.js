@@ -80,8 +80,8 @@ export default class SortableTable extends SortableTableV2 {
     url.searchParams.set('_sort', this.sorted.fieldName);
     url.searchParams.set('_start', this.start);
     url.searchParams.set('_end', this.end);
-    url.searchParams.set('_from', this.from);
-    url.searchParams.set('_to', this.to);
+    url.searchParams.set('from', this.from.toISOString());
+    url.searchParams.set('to', this.to.toISOString());
 
     return url.href;
   }
@@ -144,8 +144,10 @@ export default class SortableTable extends SortableTableV2 {
   displayPlaceholder() {
     if (!this.data.length && !this.isLoading) {
       this.showSubElement('emptyPlaceholder');
+      this.element.classList.add('sortable-table_empty');
     } else {
       this.hideSubElement('emptyPlaceholder');
+      this.element.classList.remove('sortable-table_empty');
     }
   }
 

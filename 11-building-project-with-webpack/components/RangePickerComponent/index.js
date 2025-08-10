@@ -63,12 +63,21 @@ export default class RangePickerComponent extends BaseComponent {
       this.to = new Date(rangePickerCell.dataset.value);
       this.year = this.to.getFullYear();
       
+      this.normalizeDates();
+      
       this.subElements.from.textContent = this.formatDate(this.from);
       this.subElements.to.textContent = this.formatDate(this.to);
 
       this.dispatchEvent();
       this.closeRangePicker();
     }
+  }
+
+  normalizeDates() {
+    const from = new Date(Math.min(this.from.getTime(), this.to.getTime()));
+    const to = new Date(Math.max(this.from.getTime(), this.to.getTime()));
+    this.from = from;
+    this.to = to;
   }
 
   closeRangePicker() {

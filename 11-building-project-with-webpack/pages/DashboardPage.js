@@ -2,6 +2,7 @@ import BasePage from "./BasePage.js";
 import ChartComponent from "../components/ChartComponent/index.js";
 import RangePickerComponent from "../components/RangePickerComponent/index.js";
 import SortableTableComponent from "../components/SortableTableComponent/index.js";
+import TooltipComponent from "../components/TooltipComponent/index.js";
 import header from '../constants/bestsellers-header.js';
 
 export default class DashboardPage extends BasePage {  
@@ -21,6 +22,9 @@ export default class DashboardPage extends BasePage {
       customersChart: this.customersChart,
       sortableTable: this.sortableTable,
     };
+
+    const tooltip = new TooltipComponent();
+    tooltip.initialize();
 
     document.addEventListener('date-select', this.dateSelectHandler);
   }
@@ -47,7 +51,6 @@ export default class DashboardPage extends BasePage {
   }
 
   createRangePicker() {
-    console.log('createRangePicker');
     this.rangePicker = new RangePickerComponent({ 
       from: this.from, 
       to: this.to 
@@ -61,8 +64,8 @@ export default class DashboardPage extends BasePage {
         from: this.from,
         to: this.to
       },
-      label: 'orders',
-      link: '#'
+      label: 'Заказы',
+      link: '/sales'
     });
   }
 
@@ -73,7 +76,7 @@ export default class DashboardPage extends BasePage {
         from: this.from,
         to: this.to
       },
-      label: 'sales',
+      label: 'Продажи',
       formatHeading: data => `$${data}`
     });
   }
@@ -85,7 +88,7 @@ export default class DashboardPage extends BasePage {
         from: this.from,
         to: this.to
       },
-      label: 'customers',
+      label: 'Клиенты',
     });
   }
 
@@ -93,6 +96,7 @@ export default class DashboardPage extends BasePage {
     this.sortableTable = new SortableTableComponent(header, {
       url: 'api/dashboard/bestsellers',
       data: [],
+      isSortLocally: true,
       sorted: {
         id: header.find(item => item.sortable).id,
         order: 'asc'
@@ -106,7 +110,7 @@ export default class DashboardPage extends BasePage {
     return (`
         <div class="dashboard">
           <div class="content__top-panel">
-            <h2 class="page-title">Dashboard</h2>
+            <h2 class="page-title">Панель управления</h2>
             <!-- RangePicker component -->
             <div data-component="rangePicker"></div>
           </div>
@@ -117,7 +121,7 @@ export default class DashboardPage extends BasePage {
             <div data-component="customersChart" class="dashboard__chart_customers"></div>
           </div>
 
-          <h3 class="block-title">Best sellers</h3>
+          <h3 class="block-title">Лидеры продаж</h3>
 
           <div data-component="sortableTable">
             <!-- sortable-table component -->

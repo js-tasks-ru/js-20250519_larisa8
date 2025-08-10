@@ -1,9 +1,9 @@
-import DashboardPage from "./pages-map/DashboardPage.js";
-import CategoriesPage from "./pages-map/CategoriesPage.js";
-import ProductsPage from "./pages-map/ProductsPage.js";
-import ProductEditPage from "./pages-map/ProductEditPage.js";
-import SalesPage from "./pages-map/SalesPage.js";
-import NotFoundPage from "./pages-map/NotFoundPage.js";
+import DashboardPage from "./pages/DashboardPage.js";
+import CategoriesPage from "./pages/CategoriesPage.js";
+import ProductsPage from "./pages/ProductsPage.js";
+import ProductEditPage from "./pages/ProductEditPage.js";
+import SalesPage from "./pages/SalesPage.js";
+import NotFoundPage from "./pages/NotFoundPage.js";
 import BrowserRouter from "./BrowserRouter.js";
 
 const routes = [
@@ -35,5 +35,8 @@ const routes = [
 
 const containerElement = document.getElementById('content');
 const router = new BrowserRouter(containerElement, routes);
+
+const sidebarToggle = document.querySelector('.sidebar__toggler');
+sidebarToggle.onclick = () => document.body.classList.toggle('is-collapsed-sidebar');
 
 router.run();

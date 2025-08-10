@@ -131,10 +131,7 @@ export default class SortableTable extends BaseComponent {
             </div>
             <div data-element="loading" class="loading-line sortable-table__loading-line"></div>
             <div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
-                <div>
-                    <p>No products satisfies your filter criteria</p>
-                    <button type="button" class="button-primary-outline">Reset all filters</button>
-                </div>
+              <div>Нет данных</div>
             </div>
         </div>
     `;

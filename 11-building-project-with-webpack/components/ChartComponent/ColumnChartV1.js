@@ -30,7 +30,7 @@ export default class ColumnChart extends BaseComponent {
 
   createTemplateLink() {
     if (this.link) {
-      return `<a href="${this.link}" class="column-chart__link">View all</a>`;
+      return `<a href="${this.link}" class="column-chart__link">Подробнее</a>`;
     }
     
     return '';
