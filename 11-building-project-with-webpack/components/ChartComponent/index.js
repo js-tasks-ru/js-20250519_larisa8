@@ -1,7 +1,7 @@
 import fetchJson from '../../utils/fetch-json.js';
 import ColumnChartV1 from './ColumnChartV1.js';
 
-const BACKEND_URL = 'https://course-js.javascript.ru';
+import { BACKEND_URL } from '../../constants/index.js';
 
 export default class ColumnChart extends ColumnChartV1 {
   subElements = {};

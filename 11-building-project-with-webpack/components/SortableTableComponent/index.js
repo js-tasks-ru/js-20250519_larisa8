@@ -1,6 +1,7 @@
 import fetchJson from '../../utils/fetch-json.js';
 import SortableTableV2 from './SortableTableV2.js';
-const BACKEND_URL = 'https://course-js.javascript.ru';
+
+import { BACKEND_URL } from '../../constants/index.js';
 
 export default class SortableTable extends SortableTableV2 {
   isScroll = true;
@@ -17,8 +18,8 @@ export default class SortableTable extends SortableTableV2 {
       start: 0,
       size: 30
     },
-    from = new Date(),
-    to = new Date()
+    from,
+    to
   } = {}) {
     
     super(
@@ -80,9 +81,15 @@ export default class SortableTable extends SortableTableV2 {
     url.searchParams.set('_sort', this.sorted.fieldName);
     url.searchParams.set('_start', this.start);
     url.searchParams.set('_end', this.end);
-    url.searchParams.set('from', this.from.toISOString());
-    url.searchParams.set('to', this.to.toISOString());
-
+    
+    if (this.from) {
+      url.searchParams.set('from', this.from.toISOString());
+    }
+    
+    if (this.to) {
+      url.searchParams.set('to', this.to.toISOString());
+    }
+    
     return url.href;
   }
 
