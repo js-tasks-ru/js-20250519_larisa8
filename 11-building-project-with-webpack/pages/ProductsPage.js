@@ -1,6 +1,8 @@
 import BasePage from "./BasePage.js";
 import SortableTableComponent from "../components/SortableTableComponent/index.js";
 import DoubleSliderComponent from "../components/DoubleSliderComponent/index.js";
+import InputComponent from "../components/InputComponent/index.js";
+import SelectComponent from "../components/SelectComponent/index.js";
 
 import header from '../constants/products-header.js';
 import { BACKEND_URL } from '../constants/index.js';
@@ -8,42 +10,80 @@ export default class ProductsPage extends BasePage {
   constructor(props) {
     super(props);
     
+    this.productNameElement = 'productName';
+    this.productNameId = 'productName';
+    this.statusElement = 'status';
+    this.statusId = 'status';
+
+    this.sortableTableUrl = new URL('api/rest/products?_embed=subcategory.category', BACKEND_URL);
+
     this.createComponents();
+
     this.componentMap = {
       sortableTable: this.sortableTable,
-      doubleSlider: this.doubleSlider
+      doubleSlider: this.doubleSlider,
+      productNameInput: this.productNameInput,
+      filterStatus: this.statusSelect
     };
 
-    document.addEventListener('range-select', this.updateTable, true);
+    document.addEventListener('range-select', this.updateTableWithRange, true);
+    document.addEventListener(`${this.productNameElement}-input`, this.updateTableWithTitle, true);
+    document.addEventListener(`${this.statusElement}-change`, this.updateTableWithStatus, true);
   }
 
-  updateTable = () => {
-    const url = new URL(this.sortableTable.url, BACKEND_URL);
-    const { filterName, filterStatus } = this.componentElements;
+  updateTableWithTitle = ({ detail }) => {
+    this.sortableTableUrl.searchParams.set('title_like', detail.value); 
+    this.sortableTable.url = this.sortableTableUrl;
+    this.sortableTable.renderTable();
+  }
 
-    if (filterName.value) {
-      url.searchParams.set('title_like', filterName.value); 
+  updateTableWithStatus = ({ detail }) => {
+    if (detail.value) {
+      this.sortableTableUrl.searchParams.set('status', detail.value); 
     }
-    
-    url.searchParams.set('price_gte', this.doubleSlider.selected.from);
-    url.searchParams.set('price_lte', this.doubleSlider.selected.to);
-    
-    if (filterStatus.value) {
-      url.searchParams.set('status', filterStatus.value);
-    }
+    this.sortableTable.url = this.sortableTableUrl;
+    this.sortableTable.renderTable();
+  }
 
-    this.sortableTable.url = url;
+  updateTableWithRange = () => {
+    this.sortableTableUrl.searchParams.set('price_gte', this.doubleSlider.selected.from);
+    this.sortableTableUrl.searchParams.set('price_lte', this.doubleSlider.selected.to);
+    this.sortableTable.url = this.sortableTableUrl;
     this.sortableTable.renderTable();
   }
 
   createComponents() {
     this.createSortableTable();
     this.createDoubleSlider();
+    this.createProductNameInput();
+    this.createStatusSelect();
+  }
+
+  createProductNameInput() {
+    this.productNameInput = new InputComponent({
+      label: 'Сортировать по:',
+      placeholder: 'Название товара',
+      id: this.productNameId,
+      elementName: this.productNameElement
+    });
+  }
+
+  createStatusSelect() {
+    this.statusSelect = new SelectComponent({
+      label: 'Статус:',
+      id: this.statusId,
+      elementName: this.statusElement,
+      options: [
+        { value: '', title: 'Любой'},
+        { value: '1', title: 'Активный'},
+        { value: '0', title: 'Неактивный'},
+      ]
+    });
   }
     
   createSortableTable() {
     this.sortableTable = new SortableTableComponent(header, {
-      url: 'api/rest/products?_embed=subcategory.category',
+      url: this.sortableTableUrl,
       data: [],
       isSortLocally: false,
       sorted: {
@@ -69,22 +109,12 @@ export default class ProductsPage extends BasePage {
             <a href="/products/add" class="button-primary">Добавить товар</a>
           </div>
           <div class="content-box content-box_small">
-            <form class="form-inline">
-              <div class="form-group">
-                <label class="form-label">Сортировать по:</label>
-                <input type="text" data-component="filterName" class="form-control" placeholder="Название товара">
-              </div>
+            <form data-component="productForm" class="form-inline">
+              <div data-component="productNameInput"></div>
               <div data-component="doubleSlider" class="form-group">
                 <label class="form-label">Цена:</label>
               </div>
-              <div class="form-group">
-                <label class="form-label">Статус:</label>
-                <select class="form-control" data-component="filterStatus">
-                  <option value="" selected="">Любой</option>
-                  <option value="1">Активный</option>
-                  <option value="0">Неактивный</option>
-                </select>
-              </div>
+              <div data-component="filterStatus"></div>
             </form>
           </div>
           <div data-component="sortableTable" class="products-list__container"></div>
