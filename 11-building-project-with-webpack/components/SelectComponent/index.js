@@ -54,7 +54,6 @@ export default class InputComponent extends BaseComponent {
     this.element.remove();
   }
 
-
   destroy() {
     super.destroy();
     this.remove();

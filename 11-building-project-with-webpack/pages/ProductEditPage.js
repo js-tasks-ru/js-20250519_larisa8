@@ -1,21 +1,39 @@
-import ContentComponent from "../components/ContentComponent.js";
 import BasePage from "./BasePage.js";
+import ProductForm from "../components/ProductFormComponent/index.js";
 
 export default class ProductEditPage extends BasePage {
-    componentMap = {
-      before: new ContentComponent({ content: "before" }),
-      content: new ContentComponent({ content: "Product edit page" }),
-      after: new ContentComponent({ content: "after" }),
-    }
+  constructor(props) {
+    super(props);
 
-    createTemplate() {
-      return (`
-            <div>
-                <h1>Product edit</h1>
-                <div data-component="before"></div>
-                <div data-component="content"></div>
-                <div data-component="after"></div>
-            </div>
-        `);
-    }
+    this.createComponents();
+
+    this.componentMap = {
+      productForm: this.productForm
+    };
+  }
+
+  createComponents() {
+    this.createProductForm();
+  }
+
+  createProductForm() {    
+    this.productForm = new ProductForm();
+  }
+
+  renderForm = async () => {
+    await this.productForm.render();
+  };
+
+  createTemplate() {
+    return (`
+        <div class="products-edit">
+          <div class="content__top-panel">
+            <h1 class="page-title">
+              <a href="/products" class="link">Товары</a> / Добавить
+            </h1>
+          </div>
+          <div data-component="productForm" class="content-box"></div>
+        </div>
+      `);
+  }
 }
