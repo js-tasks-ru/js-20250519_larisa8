@@ -85,6 +85,7 @@ export default class ColumnChart extends BaseComponent {
   }
 
   destroy() {
+    super.destroy();
     this.remove();
   }
 }

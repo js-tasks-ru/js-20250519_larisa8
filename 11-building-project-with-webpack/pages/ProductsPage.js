@@ -38,9 +38,12 @@ export default class ProductsPage extends BasePage {
   }
 
   updateTableWithStatus = ({ detail }) => {
-    if (detail.value) {
+    if (detail.value === '') {
+      this.sortableTableUrl.searchParams.delete('status'); 
+    } else {
       this.sortableTableUrl.searchParams.set('status', detail.value); 
     }
+   
     this.sortableTable.url = this.sortableTableUrl;
     this.sortableTable.renderTable();
   }
@@ -74,9 +77,9 @@ export default class ProductsPage extends BasePage {
       id: this.statusId,
       elementName: this.statusElement,
       options: [
-        { value: '', title: 'Любой'},
         { value: '1', title: 'Активный'},
         { value: '0', title: 'Неактивный'},
+        { value: '', title: 'Любой'},
       ]
     });
   }

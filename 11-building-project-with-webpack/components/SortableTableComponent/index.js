@@ -32,8 +32,6 @@ export default class SortableTable extends SortableTableV2 {
 
     this.url = url;
     this.controller = new AbortController();
-    this.from = from;
-    this.to = to;
 
     this.initPageParams(pageParams);
     this.init();
@@ -81,14 +79,6 @@ export default class SortableTable extends SortableTableV2 {
     url.searchParams.set('_sort', this.sorted.fieldName);
     url.searchParams.set('_start', this.start);
     url.searchParams.set('_end', this.end);
-    
-    if (this.from) {
-      url.searchParams.set('from', this.from.toISOString());
-    }
-    
-    if (this.to) {
-      url.searchParams.set('to', this.to.toISOString());
-    }
     
     return url.href;
   }

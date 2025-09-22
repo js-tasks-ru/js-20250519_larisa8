@@ -4,6 +4,7 @@ import RangePickerComponent from "../components/RangePickerComponent/index.js";
 import SortableTableComponent from "../components/SortableTableComponent/index.js";
 import TooltipComponent from "../components/TooltipComponent/index.js";
 import header from '../constants/bestsellers-header.js';
+import { BACKEND_URL } from '../constants/index.js';
 
 export default class DashboardPage extends BasePage {  
   constructor(props) {
@@ -45,8 +46,11 @@ export default class DashboardPage extends BasePage {
     this.salesChart.update(this.from, this.to);
     this.customersChart.update(this.from, this.to);
 
-    this.sortableTable.from = this.from;
-    this.sortableTable.to = this.to;
+    const url = new URL(this.sortableTable.url, BACKEND_URL);
+    url.searchParams.set('from', this.from.toISOString());
+    url.searchParams.set('to', this.to.toISOString());
+    this.sortableTable.url = url;
+
     this.sortableTable.renderTable();
   }
 
@@ -94,15 +98,13 @@ export default class DashboardPage extends BasePage {
 
   createSortableTable() {
     this.sortableTable = new SortableTableComponent(header, {
-      url: 'api/dashboard/bestsellers',
+      url: `api/dashboard/bestsellers?from=${this.from?.toISOString()}&to=${this.to?.toISOString()}`,
       data: [],
       isSortLocally: true,
       sorted: {
         id: header.find(item => item.sortable).id,
         order: 'asc'
-      },
-      from: this.from,
-      to: this.to
+      }
     });
   }
 
