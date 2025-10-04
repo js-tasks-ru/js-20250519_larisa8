@@ -1,21 +1,48 @@
-import ContentComponent from "../components/ContentComponent.js";
-import BasePage from "./BasePage.js";
+import BasePage from './BasePage.js';
+import AccordionListComponent from '../components/AccordionListComponent/index.js';
+import { BACKEND_URL } from '../constants/index.js';
+import fetchJson from '../utils/fetch-json.js';
 
 export default class CategoriesPage extends BasePage {
-    componentMap = {
-      before: new ContentComponent({ content: "before" }),
-      content: new ContentComponent({ content: "Categories page" }),
-      after: new ContentComponent({ content: "after" }),
-    }
+  constructor(props) {
+    super(props);
 
-    createTemplate() {
-      return (`
-            <div>
-                <h1>Categories</h1>
-                <div data-component="before"></div>
-                <div data-component="content"></div>
-                <div data-component="after"></div>
+    this.categories = [];
+    this.getCategories();
+    
+    this.accordionListComponent = new AccordionListComponent({
+      items: this.categories
+    });
+
+    this.componentMap = {
+      accordionListComponent: this.accordionListComponent
+    };
+  }
+
+  async getCategories() {    
+    const url = new URL('/api/rest/categories', BACKEND_URL);
+    url.searchParams.set('_sort', 'weight');
+    url.searchParams.set('_refs', 'subcategory');
+
+    try {
+      this.categories = await fetchJson(url);
+
+      this.accordionListComponent.items = this.categories;
+      this.accordionListComponent.update();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  createTemplate() {
+    return (`
+            <div class="categories">
+              <div class="content__top-panel">
+                <h1 class="page-title">Категории товаров</h1>
+              </div>
+              <p>Подкатегории можно перетаскивать, меняя их порядок внутри своей категории.</p>
+              <div data-component="accordionListComponent"></div>
             </div>
         `);
-    }
+  }
 }

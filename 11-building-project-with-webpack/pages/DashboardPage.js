@@ -98,7 +98,7 @@ export default class DashboardPage extends BasePage {
 
   createSortableTable() {
     this.sortableTable = new SortableTableComponent(header, {
-      url: `api/dashboard/bestsellers?from=${this.from?.toISOString()}&to=${this.to?.toISOString()}`,
+      url: `api/dashboard/bestsellers?from=${this.from.toISOString()}&to=${this.to.toISOString()}`,
       data: [],
       isSortLocally: true,
       sorted: {

@@ -50,7 +50,7 @@ export default class SalesPage extends BasePage {
 
   createSortableTable() {
     this.sortableTable = new SortableTableComponent(header, {
-      url: `/api/rest/orders?createdAt_gte=${this.from?.toISOString()}&createdAt_lte=${this.to?.toISOString()}`,
+      url: `/api/rest/orders?createdAt_gte=${this.from.toISOString()}&createdAt_lte=${this.to.toISOString()}`,
       data: [],
       isSortLocally: false,
       sorted: {
