@@ -19,21 +19,12 @@ export default class AccordionListComponent extends BaseComponent {
     );
   }
 
-  getItemsProps() {
-    return this.items.map(item => {
-      return {
-        title: item.title,
-        items: item.subcategories
-      };
-    });
-  }
-
   createListTemplate() {
-    return this.getItemsProps()
-    .map(({ title, items }) => {
+    return this.items.map(item => {
       const accordionComponent = new AccordionComponent({
-        title,
-        items
+        title: item.title,
+        items: item.subcategories,
+        isOpened: true
       });
 
       accordionComponent.render(this.subElements.list);
