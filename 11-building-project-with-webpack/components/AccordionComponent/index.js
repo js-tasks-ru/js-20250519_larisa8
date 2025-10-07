@@ -13,7 +13,7 @@ export default class AccordionComponent extends BaseComponent {
     return (
       `
       <div>
-        <div class="category" data-element="categoryContainer">
+        <div class="${this.createAccordionClasses()}" data-element="categoryContainer">
           <div class="category__header">${this.title}</div>
           <div class="category__body">
             <div class="subcategory-list" data-element="subcategoryList">
@@ -23,6 +23,10 @@ export default class AccordionComponent extends BaseComponent {
       </div>
       `
     );
+  }
+
+  createAccordionClasses () {
+    return this.isOpened ? 'category category_open' : 'category';
   }
 
   addSubcategoryList() {
