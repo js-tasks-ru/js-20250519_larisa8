@@ -26,6 +26,10 @@ export default class SortableList extends BaseComponent {
   }
 
   handlePointerDown = (event) => {
+    if (!this.element.contains(event.target.closest('.sortable-list__item'))) {
+      return;
+    }
+
     if (event.target.dataset.deleteHandle === '') {
       this.deleteItem(event.target);
     }

@@ -11,30 +11,28 @@ export default class AccordionListComponent extends BaseComponent {
     return (
       `
       <div>
-        <div data-element="list">
-          ${this.createListTemplate()}
-        </div>
+        <div data-element="list"></div>
       </div>
       `
     );
   }
 
-  createListTemplate() {
+  appendListItems() {
     return this.items.map(item => {
       const accordionComponent = new AccordionComponent({
+        id: item.id,
         title: item.title,
         items: item.subcategories,
         isOpened: true
       });
 
       accordionComponent.render(this.subElements.list);
-      return accordionComponent.element.outerHTML;
-    })
-    .join('');
+      this.subElements.list.append(accordionComponent.element);
+    });
   }
 
   update() {
-    this.subElements.list.innerHTML = this.createListTemplate();
+    this.appendListItems();
   }
 
   async render(...args) {

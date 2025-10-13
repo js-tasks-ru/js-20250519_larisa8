@@ -4,6 +4,7 @@ import SortableListComponent from "../SortableListComponent";
 export default class AccordionComponent extends BaseComponent {
   constructor(props) {
     super(props);
+    this.id = props.id;
     this.title = props.title;
     this.items = props.items;
     this.isOpened = props.isOpened;
@@ -13,7 +14,7 @@ export default class AccordionComponent extends BaseComponent {
     return (
       `
       <div>
-        <div class="${this.createAccordionClasses()}" data-element="categoryContainer">
+        <div class="${this.createAccordionClasses()}" data-element="categoryContainer" data-id="${this.id}">
           <div class="category__header">${this.title}</div>
           <div class="category__body">
             <div class="subcategory-list" data-element="subcategoryList">
