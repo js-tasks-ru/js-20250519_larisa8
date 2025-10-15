@@ -17,6 +17,35 @@ export default class CategoriesPage extends BasePage {
     this.componentMap = {
       accordionListComponent: this.accordionListComponent
     };
+
+    document.addEventListener('change-order', this.changeOrder);
+  }
+
+  changeOrder = async ({ detail }) => {
+    const categoriesIndex = this.categories.findIndex((item) => item.id === detail.id);
+
+    const newPosition = Array.from(detail.items).indexOf(detail.element);
+    const oldPosition = this.categories[categoriesIndex].subcategories.findIndex((item) => item.id === detail.element.dataset.id);
+
+    const oldElement = this.categories[categoriesIndex].subcategories[oldPosition];
+    const newElement = this.categories[categoriesIndex].subcategories[newPosition];
+
+    this.categories[categoriesIndex].subcategories[oldPosition] = newElement;
+    this.categories[categoriesIndex].subcategories[newPosition] = oldElement;
+
+    const url = new URL('/api/rest/subcategories', BACKEND_URL);
+
+    try {
+      const data = await fetchJson(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.categories)
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async getCategories() {    

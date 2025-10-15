@@ -32,6 +32,7 @@ export default class AccordionComponent extends BaseComponent {
 
   addSubcategoryList() {
     const sortableListComponent = new SortableListComponent({
+      id: this.id,
       items: this.items.map(({ id, title, count }) => {
         const element = document.createElement('li');
         element.classList.add('categories__sortable-list-item');

@@ -3,6 +3,7 @@ import BaseComponent from "../BaseComponent.js";
 export default class SortableList extends BaseComponent {
   constructor(props) {
     super(props);
+    this.id = props.id;
     this.items = props.items;
     this.element = this.createList();
     this.dragElement = null;
@@ -144,6 +145,8 @@ export default class SortableList extends BaseComponent {
 
     this.items = this.element.children;
 
+    this.dispatchEvent();
+
     document.removeEventListener('pointermove', this.handlePointerMove);
     this.dragElement.removeEventListener('pointerup', this.handlePointerUp);
   }
@@ -167,6 +170,17 @@ export default class SortableList extends BaseComponent {
     element.style.width = width + 'px';
     element.style.height = height + 'px';
     return element;
+  }
+
+  dispatchEvent() {
+    document.dispatchEvent(new CustomEvent('change-order', {
+      bubbles: true,
+      detail: {
+        id: this.id,
+        items: this.items,
+        element: this.dragElement
+      }
+    }));
   }
 
   destroyListeners() {
