@@ -20,9 +20,9 @@ export default class SortableList extends BaseComponent {
 
   deleteItem = (element) => {
     const itemElement = element.closest('.sortable-list__item');
-    const listElement = document.querySelector('.sortable-list');
+
     itemElement.remove();
-    this.items = listElement.children;
+    this.items = this.element.children;
   }
 
   handlePointerDown = (event) => {
@@ -75,8 +75,7 @@ export default class SortableList extends BaseComponent {
     this.dragElement.style.height = element.offsetHeight + 'px';
     this.dragElement.classList.add('sortable-list__item_dragging');
     
-    const listElement = document.querySelector('.sortable-list');
-    listElement.append(this.dragElement);
+    this.element.append(this.dragElement);
 
     this.moveAt(clientX, clientY);
   }
@@ -93,6 +92,10 @@ export default class SortableList extends BaseComponent {
     }
   
     let droppableBelow = elemBelow.closest('.sortable-list__item');
+
+    if (!this.element.contains(droppableBelow)) {
+      return;
+    }
 
     if (this.currentDroppable == droppableBelow) {
       return;
@@ -139,8 +142,7 @@ export default class SortableList extends BaseComponent {
 
     this.replacePlaceHolder(this.dragElement);
 
-    const listElement = document.querySelector('.sortable-list');
-    this.items = listElement.children;
+    this.items = this.element.children;
 
     document.removeEventListener('pointermove', this.handlePointerMove);
     this.dragElement.removeEventListener('pointerup', this.handlePointerUp);
