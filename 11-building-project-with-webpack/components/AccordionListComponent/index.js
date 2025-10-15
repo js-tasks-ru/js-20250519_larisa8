@@ -18,7 +18,11 @@ export default class AccordionListComponent extends BaseComponent {
   }
 
   appendListItems() {
-    return this.items.map(item => {
+    if (!this.subElements.list) {
+      return;
+    }
+
+    this.items.map(item => {
       const accordionComponent = new AccordionComponent({
         id: item.id,
         title: item.title,
@@ -26,8 +30,9 @@ export default class AccordionListComponent extends BaseComponent {
         isOpened: true
       });
 
-      accordionComponent.render(this.subElements.list);
-      this.subElements.list.append(accordionComponent.element);
+      accordionComponent.render(this.subElements.list).then(() => {
+        this.subElements.list.append(accordionComponent.element);
+      });
     });
   }
 
@@ -36,7 +41,8 @@ export default class AccordionListComponent extends BaseComponent {
   }
 
   async render(...args) {
-    super.render(...args);
+    await super.render(...args);
+    this.appendListItems();
     this.createListeners();
   }
 

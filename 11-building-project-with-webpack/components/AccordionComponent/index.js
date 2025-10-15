@@ -53,7 +53,7 @@ export default class AccordionComponent extends BaseComponent {
   }
 
   async render(...args) {
-    super.render(...args);
+    await super.render(...args);
     this.addSubcategoryList();
   }
   

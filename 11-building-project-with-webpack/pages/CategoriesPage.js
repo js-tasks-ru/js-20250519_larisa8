@@ -28,7 +28,11 @@ export default class CategoriesPage extends BasePage {
       this.categories = await fetchJson(url);
 
       this.accordionListComponent.items = this.categories;
-      this.accordionListComponent.update();
+
+      if (this.accordionListComponent.element) {
+        this.accordionListComponent.render(this.accordionListComponent.element);
+      }
+
     } catch (err) {
       console.error(err);
     }
