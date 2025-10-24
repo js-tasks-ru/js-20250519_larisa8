@@ -9,10 +9,7 @@ export default class SortableList {
   }
 
   createListeners() {
-    document.addEventListener('pointerdown', this.handlePointerDown, { 
-      bubbles: true,
-      which: 1
-    });
+    document.addEventListener('pointerdown', this.handlePointerDown, true);
   }
 
   deleteItem = (element) => {
@@ -161,10 +158,7 @@ export default class SortableList {
   }
 
   destroyListeners() {
-    document.removeEventListener('pointerdown', this.handlePointerDown, { 
-      bubbles: true,
-      which: 1
-    });
+    document.removeEventListener('pointerdown', this.handlePointerDown, true);
   }
 
   destroy() {
