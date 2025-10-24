@@ -24,12 +24,16 @@ export default class ProductEditPage extends BasePage {
     await this.productForm.render();
   };
 
+  getFormTitle() {
+    return this.productForm.isEdit ? 'Редактировать' : 'Добавить';
+  }
+
   createTemplate() {
     return (`
         <div class="products-edit">
           <div class="content__top-panel">
             <h1 class="page-title">
-              <a href="/products" class="link">Товары</a> / Добавить
+              <a href="/products" class="link">Товары</a> / ${this.getFormTitle()}
             </h1>
           </div>
           <div data-component="productForm" class="content-box"></div>

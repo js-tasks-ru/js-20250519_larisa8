@@ -10,8 +10,7 @@ export default class ProductForm extends BaseComponent {
 
   constructor (props) {
     super(props);
-    this.productId = props.productId;
-    this.isEdit = this.productId;
+    this.changeFormMode(props.productId);
     this.fileElements = [];
     this.setProduct();
   }
@@ -29,7 +28,14 @@ export default class ProductForm extends BaseComponent {
     Object.assign(this.product, data);
   }
 
+  changeFormMode(id) {
+    this.productId = id;
+    this.isEdit = this.productId;
+  }
+
   async render(...args) {
+    this.changeFormMode(...args[1]);
+
     await this.getCategories();
     await this.getProductById();
 

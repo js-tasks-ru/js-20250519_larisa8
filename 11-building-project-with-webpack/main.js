@@ -24,6 +24,10 @@ const routes = [
     page: new ProductEditPage()
   },  
   {
+    pathname: /\/products\/(.[\w-]+)/i,
+    page: new ProductEditPage()
+  },
+  {
     pathname: '/sales',
     page: new SalesPage()
   },
