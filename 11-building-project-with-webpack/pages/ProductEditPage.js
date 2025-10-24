@@ -25,7 +25,7 @@ export default class ProductEditPage extends BasePage {
         <div class="products-edit">
           <div class="content__top-panel">
             <h1 class="page-title">
-              <a href="/products" class="link">Товары</a> / ${this.productForm.title}
+              <a href="/products" class="link">Товары</a> / ${this.title}
             </h1>
           </div>
           <div data-component="productForm" class="content-box"></div>

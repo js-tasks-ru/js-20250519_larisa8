@@ -118,7 +118,7 @@ export default class ProductsPage extends BasePage {
     return (`
         <div class="products-list">
           <div class="content__top-panel">
-            <h1 class="page-title">Товары</h1>
+            <h1 class="page-title">${this.title}</h1>
             <a href="/products/add" class="button-primary">Добавить товар</a>
           </div>
           <div class="content-box content-box_small">

@@ -83,7 +83,7 @@ export default class CategoriesPage extends BasePage {
     return (`
             <div class="categories">
               <div class="content__top-panel">
-                <h1 class="page-title">Категории товаров</h1>
+                <h1 class="page-title">${this.title}</h1>
               </div>
               <p>Подкатегории можно перетаскивать, меняя их порядок внутри своей категории.</p>
               <div data-component="accordionListComponent"></div>

@@ -120,7 +120,7 @@ export default class DashboardPage extends BasePage {
     return (`
         <div class="dashboard">
           <div class="content__top-panel">
-            <h2 class="page-title">Панель управления</h2>
+            <h2 class="page-title">${this.title}</h2>
             <!-- RangePicker component -->
             <div data-component="rangePicker"></div>
           </div>

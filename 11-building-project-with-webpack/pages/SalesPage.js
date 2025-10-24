@@ -72,7 +72,7 @@ export default class SalesPage extends BasePage {
     return (`
           <div class="sales full-height flex-column">
             <div class="content__top-panel">
-              <h1 class="page-title">Продажи</h1>
+              <h1 class="page-title">${this.title}</h1>
               <div data-component="rangePicker"></div>
             </div>
             <div class="full-height flex-column">

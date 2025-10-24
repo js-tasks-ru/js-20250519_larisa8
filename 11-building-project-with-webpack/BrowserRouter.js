@@ -28,7 +28,7 @@ export default class BrowserRouter {
             this.lastRoute.page.destroy();
           }
           const routeParams = this.extractRouteParams(route, pathname);
-          route.page.render(this.container, routeParams);
+          route.page.render(this.container, routeParams, route.title);
           this.lastRoute = route;
           history.pushState(null, '', pathname);
           return;

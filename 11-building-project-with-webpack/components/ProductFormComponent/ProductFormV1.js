@@ -31,7 +31,6 @@ export default class ProductForm extends BaseComponent {
   changeFormMode(id) {
     this.productId = id;
     this.isEdit = this.productId;
-    this.title = this.isEdit ? 'Редактировать' : 'Добавить';
   }
 
   async render(...args) {
