@@ -32,7 +32,7 @@ export default class SortableList extends BaseComponent {
       this.deleteItem(event.target);
     }
 
-    if (event.target.dataset.grabHandle !== '') {
+    if (!event.target.closest('[data-grab-handle]')) {
       return;
     }
 
