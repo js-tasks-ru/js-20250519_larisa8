@@ -140,13 +140,8 @@ export default class DoubleSlider extends BaseComponent {
     this.subElements.thumbRight.removeEventListener('pointerdown', this.onPointerDown);
   }
 
-  remove() {
-    this.element.remove();
-  }
-
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
   }
 

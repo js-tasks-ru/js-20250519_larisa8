@@ -186,11 +186,6 @@ export default class SortableList extends BaseComponent {
 
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
-  }
-
-  remove() {
-    this.element.remove();
   }
 }

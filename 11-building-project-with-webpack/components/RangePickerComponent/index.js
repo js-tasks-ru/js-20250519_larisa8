@@ -288,14 +288,9 @@ export default class RangePickerComponent extends BaseComponent {
     `;
   }
 
-  remove() {
-    this.element.remove();
-  }
-
   destroy() {
     super.destroy();
     this.destroyListeners();
-    this.remove();
   }
 
   async render(...args) {

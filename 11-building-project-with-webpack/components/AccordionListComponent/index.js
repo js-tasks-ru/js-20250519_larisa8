@@ -64,13 +64,8 @@ export default class AccordionListComponent extends BaseComponent {
     header.parentNode.classList.toggle('category_open');
   }
 
-  remove() {
-    this.element.remove();
-  }
-
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
   }
 }

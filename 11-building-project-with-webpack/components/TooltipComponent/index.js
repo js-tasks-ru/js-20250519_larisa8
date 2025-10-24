@@ -66,12 +66,8 @@ export default class Tooltip extends BaseComponent {
     document.removeEventListener('pointerout', this.hideTooltip);
   }
 
-  remove() {
-    this.element.remove();
-  }
-
   destroy() {
-    this.remove();
+    super.destroy();
     this.destroyListeners();
   }
 }

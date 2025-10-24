@@ -57,14 +57,9 @@ export default class AccordionComponent extends BaseComponent {
     await super.render(...args);
     this.addSubcategoryList();
   }
-  
-  remove() {
-    this.element.remove();
-  }
 
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
   }
 }

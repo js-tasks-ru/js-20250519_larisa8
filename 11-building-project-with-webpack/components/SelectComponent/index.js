@@ -49,14 +49,9 @@ export default class InputComponent extends BaseComponent {
   destroyListeners() {
     this.subElements[this.elementName].removeEventListener("change", this.handleChange, true);
   }
-  
-  remove() {
-    this.element.remove();
-  }
 
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
   }
 }

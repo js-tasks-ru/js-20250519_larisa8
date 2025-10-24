@@ -302,10 +302,6 @@ export default class ProductForm extends BaseComponent {
     this.subElements.imageListContainer.innerHTML = this.createImageListTemplate();
   }
 
-  remove() {
-    this.element.remove();
-  }
-
   removeFileElements() {
     this.fileElements.forEach((element) => element.remove());
   }
@@ -318,7 +314,6 @@ export default class ProductForm extends BaseComponent {
   
   destroy() {
     super.destroy();
-    this.remove();
     this.removeFileElements();
   }
 }
