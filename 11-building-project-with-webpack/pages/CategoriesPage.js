@@ -24,6 +24,10 @@ export default class CategoriesPage extends BasePage {
   changeOrder = async ({ detail }) => {
     const categoriesIndex = this.categories.findIndex((item) => item.id === detail.id);
 
+    if (categoriesIndex < 0) {
+      return;
+    }
+
     const newPosition = Array.from(detail.items).indexOf(detail.element);
     const oldPosition = this.categories[categoriesIndex].subcategories.findIndex((item) => item.id === detail.element.dataset.id);
 
@@ -77,5 +81,10 @@ export default class CategoriesPage extends BasePage {
               <div data-component="accordionListComponent"></div>
             </div>
         `);
+  }
+
+  destroy() {
+    super.destroy();
+    document.removeEventListener('change-order', this.changeOrder);
   }
 }
