@@ -26,9 +26,19 @@ export default class ProductsPage extends BasePage {
       filterStatus: this.statusSelect
     };
 
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('range-select', this.updateTableWithRange, true);
     document.addEventListener(`${this.productNameElement}-input`, this.updateTableWithTitle, true);
     document.addEventListener(`${this.statusElement}-change`, this.updateTableWithStatus, true);
+  }
+
+  removeListeners() {
+    document.removeEventListener('range-select', this.updateTableWithRange, true);
+    document.removeEventListener(`${this.productNameElement}-input`, this.updateTableWithTitle, true);
+    document.removeEventListener(`${this.statusElement}-change`, this.updateTableWithStatus, true);
   }
 
   updateTableWithTitle = ({ detail }) => {
@@ -123,5 +133,10 @@ export default class ProductsPage extends BasePage {
           <div data-component="sortableTable" class="products-list__container"></div>
         </div>
       `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }

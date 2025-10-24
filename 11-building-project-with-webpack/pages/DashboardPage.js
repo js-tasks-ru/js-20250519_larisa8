@@ -27,7 +27,15 @@ export default class DashboardPage extends BasePage {
     const tooltip = new TooltipComponent();
     tooltip.initialize();
 
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('date-select', this.dateSelectHandler);
+  }
+
+  removeListeners() {
+    document.removeEventListener('date-select', this.dateSelectHandler);
   }
 
   createComponents() {
@@ -130,5 +138,10 @@ export default class DashboardPage extends BasePage {
           </div>
         </div>
       `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }

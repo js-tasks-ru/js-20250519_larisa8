@@ -18,7 +18,15 @@ export default class CategoriesPage extends BasePage {
       accordionListComponent: this.accordionListComponent
     };
 
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('change-order', this.changeOrder);
+  }
+
+  removeListeners() {
+    document.removeEventListener('change-order', this.changeOrder);
   }
 
   changeOrder = async ({ detail }) => {
@@ -85,6 +93,6 @@ export default class CategoriesPage extends BasePage {
 
   destroy() {
     super.destroy();
-    document.removeEventListener('change-order', this.changeOrder);
+    this.removeListeners();
   }
 }

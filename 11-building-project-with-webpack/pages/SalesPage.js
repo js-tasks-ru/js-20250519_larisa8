@@ -20,7 +20,15 @@ export default class SalesPage extends BasePage {
       sortableTable: this.sortableTable,
     };
     
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('date-select', this.dateSelectHandler);
+  }
+
+  removeListeners() {
+    document.removeEventListener('date-select', this.dateSelectHandler);
   }
 
   createComponents() {
@@ -72,5 +80,10 @@ export default class SalesPage extends BasePage {
             </div>
           </div>
     `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }
