@@ -51,7 +51,7 @@ export default class ProductForm extends ProductFormV1 {
       items: this.getImageList()
     });
 
-    return this.sortableList.element.outerHTML;
+    this.subElements.imageListContainer.append(this.sortableList.element);
   }
 
   destroyListeners() {

@@ -37,7 +37,11 @@ export default class BaseComponent {
       container.appendChild(this.element);
     }
 
-    destroy() {
+    remove() {
       this.element.remove();
+    }
+
+    destroy() {
+      this.remove();
     }
 }

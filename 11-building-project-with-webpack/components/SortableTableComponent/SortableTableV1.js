@@ -136,14 +136,5 @@ export default class SortableTable extends BaseComponent {
         </div>
     `;
   }
-
-  remove() {
-    this.element.remove();
-  }
-
-  destroy() {
-    super.destroy();
-    this.remove();
-  }
 }
 

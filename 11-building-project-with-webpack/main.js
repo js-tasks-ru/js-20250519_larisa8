@@ -8,22 +8,32 @@ import BrowserRouter from "./BrowserRouter.js";
 
 const routes = [
   {
+    title: 'Панель управления',
     pathname: '/',
     page: new DashboardPage()
   },
   {
+    title: 'Категории товаров',
     pathname: '/categories',
     page: new CategoriesPage()
   },
   {
+    title: 'Товары',
     pathname: '/products',
     page: new ProductsPage()
   },
   {
+    title: 'Добавить',
     pathname: '/products/add',
     page: new ProductEditPage()
   },  
   {
+    title: 'Редактировать',
+    pathname: /\/products\/(.[\w-]+)/i,
+    page: new ProductEditPage()
+  },
+  {
+    title: 'Продажи',
     pathname: '/sales',
     page: new SalesPage()
   },

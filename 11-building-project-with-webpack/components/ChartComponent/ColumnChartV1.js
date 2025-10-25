@@ -79,13 +79,4 @@ export default class ColumnChart extends BaseComponent {
     this.data = newData;
     this.element.querySelector('[data-element="body"]').innerHTML = this.createChartBodyTemplate();
   }
-
-  remove() {
-    this.element.remove();
-  }
-
-  destroy() {
-    super.destroy();
-    this.remove();
-  }
 }

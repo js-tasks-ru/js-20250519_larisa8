@@ -18,11 +18,23 @@ export default class CategoriesPage extends BasePage {
       accordionListComponent: this.accordionListComponent
     };
 
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('change-order', this.changeOrder);
+  }
+
+  removeListeners() {
+    document.removeEventListener('change-order', this.changeOrder);
   }
 
   changeOrder = async ({ detail }) => {
     const categoriesIndex = this.categories.findIndex((item) => item.id === detail.id);
+
+    if (categoriesIndex < 0) {
+      return;
+    }
 
     const newPosition = Array.from(detail.items).indexOf(detail.element);
     const oldPosition = this.categories[categoriesIndex].subcategories.findIndex((item) => item.id === detail.element.dataset.id);
@@ -71,11 +83,16 @@ export default class CategoriesPage extends BasePage {
     return (`
             <div class="categories">
               <div class="content__top-panel">
-                <h1 class="page-title">Категории товаров</h1>
+                <h1 class="page-title">${this.title}</h1>
               </div>
               <p>Подкатегории можно перетаскивать, меняя их порядок внутри своей категории.</p>
               <div data-component="accordionListComponent"></div>
             </div>
         `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }

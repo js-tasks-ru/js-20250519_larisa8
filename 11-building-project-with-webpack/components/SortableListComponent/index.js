@@ -13,10 +13,7 @@ export default class SortableList extends BaseComponent {
   }
 
   createListeners() {
-    document.addEventListener('pointerdown', this.handlePointerDown, { 
-      bubbles: true,
-      which: 1
-    });
+    document.addEventListener('pointerdown', this.handlePointerDown, true);
   }
 
   deleteItem = (element) => {
@@ -35,7 +32,7 @@ export default class SortableList extends BaseComponent {
       this.deleteItem(event.target);
     }
 
-    if (event.target.dataset.grabHandle !== '') {
+    if (!event.target.closest('[data-grab-handle]')) {
       return;
     }
 
@@ -184,19 +181,11 @@ export default class SortableList extends BaseComponent {
   }
 
   destroyListeners() {
-    document.removeEventListener('pointerdown', this.handlePointerDown, { 
-      bubbles: true,
-      which: 1
-    });
+    document.removeEventListener('pointerdown', this.handlePointerDown, true);
   }
 
   destroy() {
     super.destroy();
-    this.remove();
     this.destroyListeners();
-  }
-
-  remove() {
-    this.element.remove();
   }
 }

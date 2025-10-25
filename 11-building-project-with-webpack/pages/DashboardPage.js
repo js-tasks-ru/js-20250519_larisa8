@@ -27,7 +27,15 @@ export default class DashboardPage extends BasePage {
     const tooltip = new TooltipComponent();
     tooltip.initialize();
 
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('date-select', this.dateSelectHandler);
+  }
+
+  removeListeners() {
+    document.removeEventListener('date-select', this.dateSelectHandler);
   }
 
   createComponents() {
@@ -112,7 +120,7 @@ export default class DashboardPage extends BasePage {
     return (`
         <div class="dashboard">
           <div class="content__top-panel">
-            <h2 class="page-title">Панель управления</h2>
+            <h2 class="page-title">${this.title}</h2>
             <!-- RangePicker component -->
             <div data-component="rangePicker"></div>
           </div>
@@ -130,5 +138,10 @@ export default class DashboardPage extends BasePage {
           </div>
         </div>
       `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }

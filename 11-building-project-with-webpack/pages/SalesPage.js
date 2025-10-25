@@ -20,7 +20,15 @@ export default class SalesPage extends BasePage {
       sortableTable: this.sortableTable,
     };
     
+    this.createListeners();
+  }
+
+  createListeners() {
     document.addEventListener('date-select', this.dateSelectHandler);
+  }
+
+  removeListeners() {
+    document.removeEventListener('date-select', this.dateSelectHandler);
   }
 
   createComponents() {
@@ -64,7 +72,7 @@ export default class SalesPage extends BasePage {
     return (`
           <div class="sales full-height flex-column">
             <div class="content__top-panel">
-              <h1 class="page-title">Продажи</h1>
+              <h1 class="page-title">${this.title}</h1>
               <div data-component="rangePicker"></div>
             </div>
             <div class="full-height flex-column">
@@ -72,5 +80,10 @@ export default class SalesPage extends BasePage {
             </div>
           </div>
     `);
+  }
+
+  destroy() {
+    super.destroy();
+    this.removeListeners();
   }
 }

@@ -23,7 +23,9 @@ export default class BasePage {
       }
     }
 
-    render(container, routeParams) {
+    render(container, routeParams, title) {
+      this.routeParams = routeParams;
+      this.title = title;
       this.element = this.createElement(this.createTemplate());
       this.selectComponentElements();
 

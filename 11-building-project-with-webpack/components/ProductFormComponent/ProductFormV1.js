@@ -10,8 +10,7 @@ export default class ProductForm extends BaseComponent {
 
   constructor (props) {
     super(props);
-    this.productId = props.productId;
-    this.isEdit = this.productId;
+    this.changeFormMode(props.productId);
     this.fileElements = [];
     this.setProduct();
   }
@@ -29,11 +28,20 @@ export default class ProductForm extends BaseComponent {
     Object.assign(this.product, data);
   }
 
+  changeFormMode(id) {
+    this.productId = id;
+    this.isEdit = this.productId;
+  }
+
   async render(...args) {
+    this.changeFormMode(...args[1]);
+
     await this.getCategories();
     await this.getProductById();
 
-    super.render(...args);
+    await super.render(...args);
+
+    this.createImageListTemplate();
 
     this.createListeners();
 
@@ -91,9 +99,7 @@ export default class ProductForm extends BaseComponent {
           </div>
           <div class="form-group form-group__wide" data-element="sortable-list-container">
             <label class="form-label">Фото</label>
-              <div data-element="imageListContainer">
-                ${this.createImageListTemplate()}
-              </div>
+              <div data-element="imageListContainer"></div>
               <button type="button" name="uploadImageButton" class="button-primary-outline"><span>Загрузить</span></button>
           </div>
           <div class="form-group form-group__half_left">
@@ -133,6 +139,10 @@ export default class ProductForm extends BaseComponent {
   }
 
   createImageListTemplate() {
+    const list = document.createElement('ul');
+    
+    list.classList.add('sortable-list');
+
     const imageList = this.product.images.map(({ url, source }, index) => `
       <li class="products-edit__imagelist-item sortable-list__item" style="">
         <input type="hidden" name="url" value="${escapeHtml(url)}">
@@ -147,12 +157,10 @@ export default class ProductForm extends BaseComponent {
         </button>
       </li>
     `);
-    
-    return `
-      <ul class="sortable-list">
-      ${imageList.join('')}
-      </ul>
-    `;
+
+    list.innerHTML = imageList.join('');
+
+    return list;
   }
 
   createCategoryOptionsTemplate() {
@@ -248,7 +256,6 @@ export default class ProductForm extends BaseComponent {
   }
 
   handleUploadImageButtonClick = () => {
-    console.log('handleUploadImageButtonClick');
     const element = this.createElement('<input type="file" accept="image/*" hidden>');
     element.onchange = this.handleUploadImageInputChange;
     this.fileElements.push(element);
@@ -282,8 +289,6 @@ export default class ProductForm extends BaseComponent {
         source: url.pathname.slice(1),
         url: data.link
       });
-
-      this.subElements.imageListContainer.innerHTML = this.createImageListTemplate();
     } catch (error) {
       console.error(error);
     } finally {
@@ -299,11 +304,6 @@ export default class ProductForm extends BaseComponent {
     }
 
     this.product.images.splice(dataset.index, 1);
-    this.subElements.imageListContainer.innerHTML = this.createImageListTemplate();
-  }
-
-  remove() {
-    this.element.remove();
   }
 
   removeFileElements() {
@@ -318,7 +318,6 @@ export default class ProductForm extends BaseComponent {
   
   destroy() {
     super.destroy();
-    this.remove();
     this.removeFileElements();
   }
 }
